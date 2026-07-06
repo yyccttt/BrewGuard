@@ -1,0 +1,37 @@
+# ===== Python / 后端 =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.env
+db.sqlite3
+db.sqlite3-journal
+db.sqlite3-shm
+db.sqlite3-wal
+migrations/
+*.log
+logs/
+app/logs/
+.pytest_cache/
+.ruff_cache/
+.aerich*
+
+# ===== Node / 前端 =====
+node_modules/
+web/dist/
+web/.vite/
+.pnpm-store/
+*.local
+
+# ===== 编辑器 / 系统 =====
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ===== 构建产物 =====
+build/
+dist/
