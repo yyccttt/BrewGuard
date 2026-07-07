@@ -2,8 +2,9 @@
 import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
 
 import DotField from '@/content/Backgrounds/DotField/DotField.vue';
+import Aurora from '@/content/Backgrounds/Aurora/Aurora.vue';
+import DecryptedText from '@/content/TextAnimations/DecryptedText/DecryptedText.vue';
 import HeroBand from './HeroBand.vue';
-import InteractiveCode from './InteractiveCode.vue';
 
 import { preloadSounds } from '@/utils/audio';
 import { hexToHsv, hsvToHex, parseHexRgb } from '@/utils/color';
@@ -168,6 +169,9 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
         glow-color="#14110E"
       />
     </div>
+    <div class="ln-hero-aurora" aria-hidden="true">
+      <Aurora :colorStops="['#0b0b0b', '#1a3d2e', '#0b0b0b']" :amplitude="0.8" :blend="0.4" :speed="0.6" />
+    </div>
 
     <HeroBand
       class="ln-hero-band"
@@ -229,11 +233,15 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
         </span>
 
         <h1 class="ln-hero-headline">
-          <span class="ln-hero-headline-line">{{ $t('hero.titleLine1') }}</span>
+          <span class="ln-hero-headline-line">
+            <DecryptedText :text="$t('hero.titleLine1')" animateOn="view" :speed="60" :maxIterations="8" />
+          </span>
 
           <br />
 
-          <span class="ln-hero-headline-line">{{ $t('hero.titleLine2') }}</span>
+          <span class="ln-hero-headline-line">
+            <DecryptedText :text="$t('hero.titleLine2')" animateOn="view" :speed="50" :maxIterations="6" useOriginalCharsOnly />
+          </span>
         </h1>
 
         <p class="ln-hero-description">

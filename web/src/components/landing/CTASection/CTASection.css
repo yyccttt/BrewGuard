@@ -1,0 +1,89 @@
+.bg-cta {
+  position: relative;
+  padding: 8rem 1.5rem;
+  background: #0b0b0b;
+  color: #fff;
+  text-align: center;
+  overflow: hidden;
+}
+
+.bg-cta-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 400px;
+  background: radial-gradient(ellipse at center, rgba(124, 255, 103, 0.12), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-cta-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.bg-cta-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.2rem;
+  background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.75) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-cta-subtitle {
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 2.5rem;
+  line-height: 1.6;
+}
+
+.bg-cta-action {
+  display: flex;
+  justify-content: center;
+}
+
+.bg-cta-star {
+  font-family: 'Geist Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bg-cta-star :deep(span) {
+  font-family: 'Geist Mono', monospace;
+}
+
+.bg-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Geist Mono', monospace;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 14px 32px;
+  border-radius: 12px;
+  background: #7cff67;
+  color: #0b0b0b;
+  border: 1px solid #7cff67;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.bg-cta-btn:hover {
+  filter: brightness(0.9);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 640px) {
+  .bg-cta {
+    padding: 5rem 1.2rem;
+  }
+}

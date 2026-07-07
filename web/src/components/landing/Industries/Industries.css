@@ -1,21 +1,20 @@
-.bg-features {
-  position: relative;
-  padding: 8rem 1.5rem 6rem;
+.bg-ind {
+  padding: 8rem 1.5rem;
   background: #0b0b0b;
   color: #fff;
 }
 
-.bg-features-inner {
+.bg-ind-inner {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.bg-features-header {
+.bg-ind-header {
   text-align: center;
   margin-bottom: 4rem;
 }
 
-.bg-features-eyebrow {
+.bg-ind-eyebrow {
   display: inline-block;
   padding: 0.35rem 0.9rem;
   margin-bottom: 1.2rem;
@@ -29,7 +28,7 @@
   border-radius: 999px;
 }
 
-.bg-features-title {
+.bg-ind-title {
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 700;
@@ -42,7 +41,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.bg-features-subtitle {
+.bg-ind-subtitle {
   font-size: clamp(0.95rem, 1.6vw, 1.1rem);
   color: rgba(255, 255, 255, 0.6);
   max-width: 640px;
@@ -50,50 +49,55 @@
   line-height: 1.6;
 }
 
-.bg-features-grid {
+.bg-ind-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
 }
 
-.bg-feature-card {
+.bg-ind-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 2rem 1.8rem;
-  height: 100%;
-  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-.bg-feature-icon {
-  width: 44px;
-  height: 44px;
-  margin-bottom: 1.4rem;
+.bg-ind-card:hover {
+  border-color: rgba(124, 255, 103, 0.3);
+}
+
+.bg-ind-icon {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 1.3rem;
   color: #7cff67;
 }
 
-.bg-feature-icon svg {
+.bg-ind-icon svg {
   width: 100%;
   height: 100%;
 }
 
-.bg-feature-name {
+.bg-ind-name {
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 0.6rem;
   color: #fff;
 }
 
-.bg-feature-desc {
-  font-size: 0.92rem;
+.bg-ind-desc {
+  font-size: 0.9rem;
   line-height: 1.65;
   color: rgba(255, 255, 255, 0.55);
   margin: 0;
 }
 
 @media (max-width: 640px) {
-  .bg-features {
-    padding: 5rem 1.2rem 4rem;
+  .bg-ind {
+    padding: 5rem 1.2rem;
   }
-  .bg-features-grid {
+  .bg-ind-grid {
     grid-template-columns: 1fr;
   }
 }
