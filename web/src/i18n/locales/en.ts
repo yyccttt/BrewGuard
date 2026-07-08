@@ -108,6 +108,20 @@ export default {
   langToggle: {
     switchTo: '中文'
   },
+  ai: {
+    title: 'BrewGuard Assistant',
+    welcome: 'Hi! I am the BrewGuard AI assistant. Ask me anything about fermentation detection, batch management, or brewing metrics.',
+    placeholder: 'Type your question...',
+    sending: 'Thinking...',
+    send: 'Send',
+    suggestions: [
+      'What is the ideal temperature for ale fermentation?',
+      'What does abnormal pH indicate?',
+      'How to use batch traceability?'
+    ],
+    error: 'Something went wrong. Please try again.',
+    openChat: 'Open AI assistant'
+  },
   admin: {
     brand: 'BrewGuard Admin',
     backHome: 'Home',
@@ -118,7 +132,26 @@ export default {
     },
     dashboard: {
       title: 'Dashboard',
-      comingSoon: 'Dashboard coming soon.'
+      overview: 'Overview',
+      cards: {
+        batchTotal: 'Total Batches',
+        batchAbnormal: 'Abnormal Batches',
+        detectionTotal: 'Detection Records',
+        avgTemp: 'Avg Temperature',
+        tempUnit: '°C'
+      },
+      chart: {
+        trendTitle: 'Detection Data Trend',
+        trendSubtitle: 'Temperature, pH and ABV over the last 24 hours',
+        distTitle: 'Batch Status Distribution',
+        distSubtitle: 'Current batches by status',
+        tempLabel: 'Temperature',
+        phLabel: 'pH',
+        abvLabel: 'ABV',
+        fermenting: 'Fermenting',
+        completed: 'Completed',
+        abnormal: 'Abnormal'
+      }
     },
     system: {
       title: 'System',

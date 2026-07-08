@@ -1,0 +1,182 @@
+.dash-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ===== 统计卡片 ===== */
+.dash-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.dash-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 1.3rem;
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.dash-card:hover {
+  transform: translateY(-2px);
+}
+
+.dash-card--batch:hover { border-color: rgba(124, 255, 103, 0.3); }
+.dash-card--abnormal:hover { border-color: rgba(255, 107, 107, 0.3); }
+.dash-card--detection:hover { border-color: rgba(91, 157, 255, 0.3); }
+.dash-card--temp:hover { border-color: rgba(255, 179, 71, 0.3); }
+
+.dash-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.dash-card--batch .dash-card-icon { background: rgba(124, 255, 103, 0.1); color: #7cff67; }
+.dash-card--abnormal .dash-card-icon { background: rgba(255, 107, 107, 0.1); color: #ff6b6b; }
+.dash-card--detection .dash-card-icon { background: rgba(91, 157, 255, 0.1); color: #5b9dff; }
+.dash-card--temp .dash-card-icon { background: rgba(255, 179, 71, 0.1); color: #ffb347; }
+
+.dash-card-body {
+  min-width: 0;
+}
+
+.dash-card-value {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.dash-card-suffix {
+  font-size: 0.7em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 2px;
+}
+
+.dash-card-label {
+  font-family: 'Geist', 'Figtree', sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.35rem;
+}
+
+/* ===== 图表卡片 ===== */
+.dash-chart-card {
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.dash-chart-header {
+  margin-bottom: 1.25rem;
+}
+
+.dash-chart-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+  color: #fff;
+}
+
+.dash-chart-subtitle {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.83rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+.dash-chart-body {
+  height: 320px;
+  position: relative;
+}
+
+/* ===== 环形图区 ===== */
+.dash-dist-body {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.dash-dist-chart {
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.dash-dist-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.dash-dist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Geist', 'Figtree', sans-serif;
+}
+
+.dash-dist-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.dash-dist-name {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dash-dist-count {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin-left: auto;
+  min-width: 30px;
+  text-align: right;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 900px) {
+  .dash-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .dash-cards {
+    grid-template-columns: 1fr;
+  }
+  .dash-chart-body {
+    height: 240px;
+  }
+  .dash-dist-body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .dash-dist-chart {
+    width: 180px;
+    height: 180px;
+  }
+}
