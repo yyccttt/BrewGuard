@@ -10,6 +10,12 @@ class Batch(BaseModel, TimestampMixin):
     start_time = fields.DatetimeField(null=True, description="发酵开始时间", index=True)
     end_time = fields.DatetimeField(null=True, description="发酵结束时间")
     remark = fields.CharField(max_length=500, null=True, description="备注")
+    temp_min = fields.FloatField(null=True, description="温度下限(°C)")
+    temp_max = fields.FloatField(null=True, description="温度上限(°C)")
+    ph_min = fields.FloatField(null=True, description="pH下限")
+    ph_max = fields.FloatField(null=True, description="pH上限")
+    abv_min = fields.FloatField(null=True, description="酒精度下限(%)")
+    abv_max = fields.FloatField(null=True, description="酒精度上限(%)")
     is_deleted = fields.BooleanField(default=False, description="软删除标记", index=True)
 
     class Meta:

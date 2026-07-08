@@ -128,6 +128,7 @@ export default {
     menu: {
       dashboard: '仪表盘',
       batch: '发酵批次',
+      alerts: '告警中心',
       system: '系统管理'
     },
     dashboard: {
@@ -138,7 +139,8 @@ export default {
         batchAbnormal: '异常批次',
         detectionTotal: '检测记录',
         avgTemp: '平均温度',
-        tempUnit: '°C'
+        tempUnit: '°C',
+        alertOpen: '待处理告警'
       },
       chart: {
         trendTitle: '检测数据趋势',
@@ -156,6 +158,32 @@ export default {
     system: {
       title: '系统管理',
       comingSoon: '系统设置即将上线。'
+    },
+    alerts: {
+      title: '告警中心',
+      empty: '暂无告警,所有指标在正常范围内。',
+      batchId: '批次',
+      metric: '指标',
+      value: '实际值',
+      threshold: '阈值',
+      direction: '方向',
+      status: '状态',
+      time: '时间',
+      actions: '操作',
+      metrics: { temperature: '温度', ph: 'pH', abv: '酒精度' },
+      directions: { high: '超上限', low: '低于下限' },
+      statuses: { open: '待处理', acknowledged: '已确认', resolved: '已解决' },
+      all: '全部',
+      acknowledge: '确认',
+      resolve: '解决',
+      acknowledged: '告警已确认',
+      resolved: '告警已解决',
+      thresholdConfig: '阈值配置',
+      tempRange: '温度范围 (°C)',
+      phRange: 'pH 范围',
+      abvRange: '酒精度范围 (%)',
+      saveThreshold: '保存',
+      thresholdSaved: '阈值已保存'
     },
     batch: {
       title: '发酵批次',
