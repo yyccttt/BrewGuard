@@ -146,7 +146,26 @@ export default {
       confirmDelete: '确定要删除这个批次吗?',
       saveSuccess: '批次保存成功',
       deleteSuccess: '批次删除成功',
-      empty: '暂无批次,点击新建第一个批次。'
+      empty: '暂无批次,点击新建第一个批次。',
+      detail: '查看详情',
+      back: '返回批次列表'
+    },
+    detection: {
+      title: '检测记录',
+      add: '新建记录',
+      edit: '编辑',
+      delete: '删除',
+      temperature: '温度 (°C)',
+      ph: 'pH',
+      abv: '酒精度 (%)',
+      remark: '备注',
+      createdAt: '记录时间',
+      actions: '操作',
+      confirmDelete: '确定要删除这条记录吗?',
+      saveSuccess: '记录保存成功',
+      deleteSuccess: '记录删除成功',
+      empty: '暂无检测记录,添加第一条记录。',
+      batchInfo: '批次信息'
     }
   }
 };

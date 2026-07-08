@@ -146,7 +146,26 @@ export default {
       confirmDelete: 'Are you sure you want to delete this batch?',
       saveSuccess: 'Batch saved successfully',
       deleteSuccess: 'Batch deleted successfully',
-      empty: 'No batches yet. Create your first one.'
+      empty: 'No batches yet. Create your first one.',
+      detail: 'View Details',
+      back: 'Back to Batches'
+    },
+    detection: {
+      title: 'Detection Records',
+      add: 'New Record',
+      edit: 'Edit',
+      delete: 'Delete',
+      temperature: 'Temp (°C)',
+      ph: 'pH',
+      abv: 'ABV (%)',
+      remark: 'Remark',
+      createdAt: 'Recorded At',
+      actions: 'Actions',
+      confirmDelete: 'Are you sure you want to delete this record?',
+      saveSuccess: 'Record saved successfully',
+      deleteSuccess: 'Record deleted successfully',
+      empty: 'No detection records yet. Add the first one.',
+      batchInfo: 'Batch Info'
     }
   }
 };
