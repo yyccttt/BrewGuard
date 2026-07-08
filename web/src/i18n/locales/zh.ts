@@ -90,10 +90,63 @@ export default {
     subtitle: '加入用数据而非经验酿酒的酒厂行列。',
     button: '立即开始'
   },
+  faq: {
+    eyebrow: '常见问题',
+    title: '您可能想了解的问题',
+    subtitle: '在开始之前,这里有您需要知道的一切。',
+    items: [
+      { q: '支持哪些传感器和协议?', a: 'BrewGuard 支持常见的模拟与数字传感器,涵盖温度、pH、溶解氧、酒精度、糖度等,可通过 MQTT、Modbus 及标准 REST 接口接入。' },
+      { q: '能否与现有生产系统集成?', a: '可以。BrewGuard 提供完善的 REST API,可向 ERP/MES 系统推送事件,无需整体替换即可融入现有流程。' },
+      { q: '批次数据如何存储和导出?', a: '每个批次保留完整记录——传感器时间线、告警与质检结论——可一键导出 PDF 或 Excel,满足合规审计。' },
+      { q: '适合小型精酿酒厂吗?', a: '完全可以。BrewGuard 从精酿工坊的单发酵罐到工业多罐产线均可适配,支持按批次配置。' },
+      { q: '提供试点或试用吗?', a: '支持在一条产线上进行试点部署,您可在规模化前先用自有工艺验证检测准确率。' }
+    ]
+  },
   marquee: {
     items: ['实时监测', '智能预警', '批次溯源', '数据驱动酿造']
   },
   langToggle: {
     switchTo: 'EN'
+  },
+  admin: {
+    brand: 'BrewGuard 管理后台',
+    backHome: '首页',
+    menu: {
+      dashboard: '仪表盘',
+      batch: '发酵批次',
+      system: '系统管理'
+    },
+    dashboard: {
+      title: '仪表盘',
+      comingSoon: '仪表盘即将上线。'
+    },
+    system: {
+      title: '系统管理',
+      comingSoon: '系统设置即将上线。'
+    },
+    batch: {
+      title: '发酵批次',
+      add: '新建批次',
+      edit: '编辑',
+      delete: '删除',
+      search: '搜索批次号...',
+      batchNo: '批次编号',
+      recipe: '配方',
+      status: '状态',
+      startTime: '开始时间',
+      endTime: '结束时间',
+      remark: '备注',
+      createdAt: '创建时间',
+      actions: '操作',
+      statuses: {
+        fermenting: '发酵中',
+        completed: '已完成',
+        abnormal: '异常'
+      },
+      confirmDelete: '确定要删除这个批次吗?',
+      saveSuccess: '批次保存成功',
+      deleteSuccess: '批次删除成功',
+      empty: '暂无批次,点击新建第一个批次。'
+    }
   }
 };

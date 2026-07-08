@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
 import DotField from '@/content/Backgrounds/DotField/DotField.vue';
 import Aurora from '@/content/Backgrounds/Aurora/Aurora.vue';
 import DecryptedText from '@/content/TextAnimations/DecryptedText/DecryptedText.vue';
+import GradientText from '@/content/TextAnimations/GradientText/GradientText.vue';
 import HeroBand from './HeroBand.vue';
 
 import { preloadSounds } from '@/utils/audio';
@@ -245,7 +246,9 @@ const dotProps = computed(() => propValues.value[1] as Record<string, number | b
         </h1>
 
         <p class="ln-hero-description">
-          {{ $t('hero.subtitle') }}
+          <GradientText :colors="['#7cff67', '#3da86a', '#7cff67']" :animationSpeed="6" direction="horizontal">
+            {{ $t('hero.subtitle') }}
+          </GradientText>
         </p>
 
         <div class="ln-hero-buttons">

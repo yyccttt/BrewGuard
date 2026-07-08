@@ -7,11 +7,11 @@
       <Hero />
       <StatsBar />
       <BrewingFeatures />
-      <Marquee />
       <HowItWorks />
       <DataPreview />
       <Industries />
       <CTASection />
+      <FAQ />
       <Footer />
     </section>
   </main>
@@ -22,12 +22,12 @@ import Footer from '@/components/landing/Footer/Footer.vue';
 import Hero from '@/components/landing/Hero/Hero.vue';
 import LandingLoader from '@/components/landing/LandingLoader/LandingLoader.vue';
 import BrewingFeatures from '@/components/landing/BrewingFeatures/BrewingFeatures.vue';
-import Marquee from '@/components/landing/Marquee/Marquee.vue';
 import StatsBar from '@/components/landing/StatsBar/StatsBar.vue';
 import HowItWorks from '@/components/landing/HowItWorks/HowItWorks.vue';
 import DataPreview from '@/components/landing/DataPreview/DataPreview.vue';
 import Industries from '@/components/landing/Industries/Industries.vue';
 import CTASection from '@/components/landing/CTASection/CTASection.vue';
+import FAQ from '@/components/landing/FAQ/FAQ.vue';
 import LangToggle from '@/components/common/LangToggle.vue';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 

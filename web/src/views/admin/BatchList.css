@@ -1,0 +1,80 @@
+.batch-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.batch-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.batch-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.batch-toolbar-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.batch-search {
+  min-width: 220px;
+}
+
+.batch-table {
+  background: #0f0f0f;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.batch-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.9rem;
+}
+
+.batch-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 380px;
+  padding-top: 0.5rem;
+}
+
+.batch-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.batch-form-row label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Geist', sans-serif;
+}
+
+.batch-dialog {
+  min-width: 420px;
+}
+
+@media (max-width: 640px) {
+  .batch-form {
+    min-width: unset;
+  }
+  .batch-dialog {
+    min-width: unset;
+  }
+  .batch-search {
+    min-width: 140px;
+  }
+}

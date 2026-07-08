@@ -10,11 +10,13 @@
       <div class="bg-how-steps">
         <template v-for="(key, i) in keys" :key="key">
           <AnimatedContent direction="vertical" :distance="50" :delay="i * 0.12" :duration="0.7">
-            <div class="bg-how-step">
-              <div class="bg-how-step-num">{{ String(i + 1).padStart(2, '0') }}</div>
-              <h3 class="bg-how-step-title">{{ t(`howItWorks.steps.${key}.title`) }}</h3>
-              <p class="bg-how-step-desc">{{ t(`howItWorks.steps.${key}.desc`) }}</p>
-            </div>
+            <ElectricBorder color="#7cff67" :speed="1.2" :chaos="0.1" :borderRadius="20" class="bg-how-step-border">
+              <div class="bg-how-step">
+                <div class="bg-how-step-num">{{ String(i + 1).padStart(2, '0') }}</div>
+                <h3 class="bg-how-step-title">{{ t(`howItWorks.steps.${key}.title`) }}</h3>
+                <p class="bg-how-step-desc">{{ t(`howItWorks.steps.${key}.desc`) }}</p>
+              </div>
+            </ElectricBorder>
           </AnimatedContent>
           <div v-if="i < keys.length - 1" class="bg-how-arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -29,6 +31,7 @@
 
 <script setup lang="ts">
 import AnimatedContent from '@/content/Animations/AnimatedContent/AnimatedContent.vue';
+import ElectricBorder from '@/content/Animations/ElectricBorder/ElectricBorder.vue';
 import { useLocale } from '@/composables/useLocale';
 import './HowItWorks.css';
 

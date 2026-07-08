@@ -90,10 +90,63 @@ export default {
     subtitle: 'Join the breweries producing with data, not guesswork.',
     button: 'Get Started'
   },
+  faq: {
+    eyebrow: 'FAQ',
+    title: 'Frequently asked questions',
+    subtitle: 'Everything you need to know before getting started.',
+    items: [
+      { q: 'Which sensors and protocols are supported?', a: 'BrewGuard supports common analog and digital sensors for temperature, pH, dissolved oxygen, ABV and gravity, accessible via MQTT, Modbus and standard REST endpoints.' },
+      { q: 'Can it integrate with our existing production system?', a: 'Yes. BrewGuard exposes a documented REST API and can push events to ERP/MES systems, so it fits into your current workflow without a full replacement.' },
+      { q: 'How is batch data stored and exported?', a: 'Every batch keeps a complete record — sensor timeline, alerts and quality verdicts — exportable to PDF or Excel in one click for compliance and audit.' },
+      { q: 'Is it suitable for small craft breweries?', a: 'Absolutely. BrewGuard scales from a single fermentation tank in a craft workshop up to multi-vessel industrial lines, with per-batch configuration.' },
+      { q: 'Do you offer a pilot or trial?', a: 'A pilot deployment on one production line is available so you can validate detection accuracy against your own process before scaling out.' }
+    ]
+  },
   marquee: {
     items: ['Real-time Monitoring', 'Smart Alerts', 'Batch Traceability', 'Data-Driven Brewing']
   },
   langToggle: {
     switchTo: '中文'
+  },
+  admin: {
+    brand: 'BrewGuard Admin',
+    backHome: 'Home',
+    menu: {
+      dashboard: 'Dashboard',
+      batch: 'Fermentation Batches',
+      system: 'System'
+    },
+    dashboard: {
+      title: 'Dashboard',
+      comingSoon: 'Dashboard coming soon.'
+    },
+    system: {
+      title: 'System',
+      comingSoon: 'System settings coming soon.'
+    },
+    batch: {
+      title: 'Fermentation Batches',
+      add: 'New Batch',
+      edit: 'Edit',
+      delete: 'Delete',
+      search: 'Search batch no...',
+      batchNo: 'Batch No',
+      recipe: 'Recipe',
+      status: 'Status',
+      startTime: 'Start Time',
+      endTime: 'End Time',
+      remark: 'Remark',
+      createdAt: 'Created At',
+      actions: 'Actions',
+      statuses: {
+        fermenting: 'Fermenting',
+        completed: 'Completed',
+        abnormal: 'Abnormal'
+      },
+      confirmDelete: 'Are you sure you want to delete this batch?',
+      saveSuccess: 'Batch saved successfully',
+      deleteSuccess: 'Batch deleted successfully',
+      empty: 'No batches yet. Create your first one.'
+    }
   }
 };

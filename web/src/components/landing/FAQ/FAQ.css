@@ -1,0 +1,130 @@
+.bg-faq {
+  padding: 8rem 1.5rem;
+  background: #0b0b0b;
+  color: #fff;
+}
+
+.bg-faq-inner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.bg-faq-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.bg-faq-eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7cff67;
+  background: rgba(124, 255, 103, 0.1);
+  border: 1px solid rgba(124, 255, 103, 0.25);
+  border-radius: 999px;
+}
+
+.bg-faq-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+  background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-faq-subtitle {
+  font-family: 'Figtree', sans-serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.bg-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bg-faq-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.bg-faq-item[open] {
+  border-color: rgba(124, 255, 103, 0.3);
+  background: rgba(124, 255, 103, 0.04);
+}
+
+.bg-faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: 'Geist', 'Figtree', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.bg-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.bg-faq-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: #7cff67;
+  transition: transform 0.3s ease;
+}
+
+.bg-faq-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.bg-faq-item[open] .bg-faq-icon {
+  transform: rotate(45deg);
+}
+
+.bg-faq-a {
+  margin: 0;
+  padding: 0 1.5rem 1.4rem;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 640px) {
+  .bg-faq {
+    padding: 5rem 1.2rem;
+  }
+  .bg-faq-q {
+    padding: 1rem 1.2rem;
+    font-size: 0.95rem;
+  }
+  .bg-faq-a {
+    padding: 0 1.2rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}

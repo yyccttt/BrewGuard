@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import brewguardLogo from '../../../assets/logos/brewguard-logo.svg';
 import { useLocale } from '@/composables/useLocale';
 import './Footer.css';
 
 const { t } = useLocale();
+const { tm } = useI18n();
 const year = new Date().getFullYear();
+
+const productItems = computed(() => (tm('footer.columns.product.items') as unknown as string[]) || []);
+const solutionItems = computed(() => (tm('footer.columns.solutions.items') as unknown as string[]) || []);
 
 const innerEl = ref<HTMLDivElement | null>(null);
 const visible = ref(false);
@@ -46,12 +51,12 @@ onBeforeUnmount(() => io?.disconnect());
         <nav class="ln-footer-nav">
           <div class="ln-footer-col">
             <span class="ln-footer-col-title">{{ t('footer.columns.product.title') }}</span>
-            <span v-for="(item, i) in t('footer.columns.product.items')" :key="`p-${i}`" class="ln-footer-link">{{ item }}</span>
+            <span v-for="(item, i) in productItems" :key="`p-${i}`" class="ln-footer-link">{{ item }}</span>
           </div>
 
           <div class="ln-footer-col">
             <span class="ln-footer-col-title">{{ t('footer.columns.solutions.title') }}</span>
-            <span v-for="(item, i) in t('footer.columns.solutions.items')" :key="`s-${i}`" class="ln-footer-link">{{ item }}</span>
+            <span v-for="(item, i) in solutionItems" :key="`s-${i}`" class="ln-footer-link">{{ item }}</span>
           </div>
         </nav>
       </div>
