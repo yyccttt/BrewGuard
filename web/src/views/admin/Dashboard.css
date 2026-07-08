@@ -109,6 +109,74 @@
   position: relative;
 }
 
+/* ===== 实时标签 + 空状态 + 骨架卡片 ===== */
+.dash-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dash-live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.72rem;
+  color: #7cff67;
+  background: rgba(124, 255, 103, 0.08);
+  border: 1px solid rgba(124, 255, 103, 0.2);
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.dash-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7cff67;
+  animation: dash-live-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes dash-live-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(124, 255, 103, 0.5); }
+  50% { opacity: 0.5; box-shadow: 0 0 0 5px rgba(124, 255, 103, 0); }
+}
+
+.dash-empty {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.dash-empty i {
+  font-size: 2.2rem;
+}
+
+.dash-empty p {
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.dash-card--skeleton {
+  opacity: 0.6;
+}
+
+.dash-count {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
 /* ===== 环形图区 ===== */
 .dash-dist-body {
   display: flex;
