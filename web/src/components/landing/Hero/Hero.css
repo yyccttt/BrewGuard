@@ -131,6 +131,42 @@
   max-width: 56ch;
 }
 
+/* Inline gradient text without the badge-like rounded container
+   that GradientText.vue wraps around its content. */
+.ln-hero-description-text {
+  background-image: linear-gradient(
+    to right,
+    #7cff67,
+    #3da86a,
+    #7cff67
+  );
+  background-size: 300% 100%;
+  background-repeat: repeat;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ln-hero-description-shimmer 12s ease-in-out infinite;
+}
+
+@keyframes ln-hero-description-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ln-hero-description-text {
+    animation: none;
+  }
+}
+
 .ln-hero-buttons {
   display: flex;
   gap: 12px;
