@@ -152,6 +152,8 @@ export default {
     dashboard: {
       title: 'Dashboard',
       overview: 'Overview',
+      live: 'LIVE',
+      noTrendData: 'No detection data yet. The trend chart will appear once records exist.',
       cards: {
         batchTotal: 'Total Batches',
         batchAbnormal: 'Abnormal Batches',

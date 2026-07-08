@@ -152,6 +152,8 @@ export default {
     dashboard: {
       title: '仪表盘',
       overview: '概览',
+      live: '实时',
+      noTrendData: '暂无检测数据,趋势图将在有检测记录后显示',
       cards: {
         batchTotal: '批次总数',
         batchAbnormal: '异常批次',
