@@ -1,5 +1,5 @@
 .bg-marquee {
-  padding: 3.5rem 0;
+  padding: 4rem 0;
   background: #0b0b0b;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -10,23 +10,30 @@
 .bg-marquee-track {
   display: inline-flex;
   align-items: center;
-  animation: bg-marquee-scroll 28s linear infinite;
+  animation: bg-marquee-scroll 30s linear infinite;
   will-change: transform;
 }
 
 .bg-marquee-item {
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.85);
-  padding: 0 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0 0.4rem;
+  display: inline-flex;
+  align-items: center;
 }
 
 .bg-marquee-dot {
-  color: #7cff67;
-  margin: 0 1rem;
-  font-weight: 400;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7cff67;
+  margin: 0 1.4rem;
+  box-shadow: 0 0 8px rgba(124, 255, 103, 0.6);
+  flex-shrink: 0;
 }
 
 @keyframes bg-marquee-scroll {
@@ -37,5 +44,14 @@
 @media (prefers-reduced-motion: reduce) {
   .bg-marquee-track {
     animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .bg-marquee {
+    padding: 2.5rem 0;
+  }
+  .bg-marquee-dot {
+    margin: 0 0.9rem;
   }
 }
