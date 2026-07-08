@@ -29,8 +29,9 @@
       </Column>
       <Column field="start_time" :header="t('admin.batch.startTime')" />
       <Column field="remark" :header="t('admin.batch.remark')" />
-      <Column :header="t('admin.batch.actions')" style="width: 140px">
+      <Column :header="t('admin.batch.actions')" style="width: 180px">
         <template #body="{ data }">
+          <Button icon="pi pi-eye" text rounded size="small" @click="goDetail(data)" v-tooltip.top="t('admin.batch.detail')" />
           <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" />
           <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDelete(data)" />
         </template>
@@ -74,6 +75,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import DataTable from 'primevue/datatable';
@@ -88,6 +90,7 @@ import { get, post, del } from '@/utils/http';
 import './BatchList.css';
 
 const { t } = useI18n();
+const router = useRouter();
 const confirm = useConfirm();
 const toast = useToast();
 
@@ -145,6 +148,10 @@ function onPage(event: any) {
   page.value = event.page + 1;
   pageSize.value = event.rows;
   loadList();
+}
+
+function goDetail(data: Batch) {
+  if (data.id) router.push(`/admin/batch/${data.id}`);
 }
 
 function openCreate() {

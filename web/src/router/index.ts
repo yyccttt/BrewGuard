@@ -30,6 +30,11 @@ const router = createRouter({
           component: () => import('@/views/admin/BatchList.vue')
         },
         {
+          path: 'batch/:id',
+          name: 'batch-detail',
+          component: () => import('@/views/admin/BatchDetail.vue')
+        },
+        {
           path: 'system',
           name: 'system',
           component: () => import('@/views/admin/System.vue')
