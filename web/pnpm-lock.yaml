@@ -14,6 +14,9 @@ importers:
       axios:
         specifier: ^1.18.1
         version: 1.18.1
+      chart.js:
+        specifier: ^4.5.1
+        version: 4.5.1
       gsap:
         specifier: ^3.15.0
         version: 3.15.0
@@ -38,6 +41,9 @@ importers:
       vue:
         specifier: ^3.5.17
         version: 3.5.39(typescript@5.9.3)
+      vue-chartjs:
+        specifier: ^5.3.3
+        version: 5.3.3(chart.js@4.5.1)(vue@3.5.39(typescript@5.9.3))
       vue-i18n:
         specifier: ^11.4.6
         version: 11.4.6(vue@3.5.39(typescript@5.9.3))
@@ -382,6 +388,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@kurkle/color@0.3.4':
+    resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
 
   '@primeuix/styled@0.7.4':
     resolution: {integrity: sha512-QSO/NpOQg8e9BONWRBx9y8VGMCMYz0J/uKfNJEya/RGEu7ARx0oYW0ugI1N3/KB1AAvyGxzKBzGImbwg0KUiOQ==}
@@ -778,6 +787,10 @@ packages:
 
   caniuse-lite@1.0.30001800:
     resolution: {integrity: sha512-MMHtuAz9Ys840zAY5F4k6fV5GaivZ9sPk+nz0mY+GYVzRBnYkN0mpqkSR92oWRQ19yQWo4HvBV/FnC16AJX8MA==}
+
+  chart.js@4.5.1:
+    resolution: {integrity: sha512-GIjfiT9dbmHRiYi6Nl2yFCq7kkwdkp1W/lp2J99rX0yo9tgJGn3lKQATztIjb5tVtevcBtIdICNWqlq5+E8/Pw==}
+    engines: {pnpm: '>=8'}
 
   combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -1216,6 +1229,12 @@ packages:
       yaml:
         optional: true
 
+  vue-chartjs@5.3.3:
+    resolution: {integrity: sha512-jqxtL8KZ6YJ5NTv6XzrzLS7osyegOi28UGNZW0h9OkDL7Sh1396ht4Dorh04aKrl2LiSalQ84WtqiG0RIJb0tA==}
+    peerDependencies:
+      chart.js: ^4.1.1
+      vue: ^3.0.0-0 || ^2.7.0
+
   vue-i18n@11.4.6:
     resolution: {integrity: sha512-l0gE7Rfy0phCa5ChKYkOq543Wgd39BCK6hkktfr1Ed4D99oRkgPK9ffShASZdeC8OJxGfdWmpYoAaAH6iLEuIg==}
     engines: {node: '>= 22'}
@@ -1525,6 +1544,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@kurkle/color@0.3.4': {}
 
   '@primeuix/styled@0.7.4':
     dependencies:
@@ -1903,6 +1924,10 @@ snapshots:
 
   caniuse-lite@1.0.30001800: {}
 
+  chart.js@4.5.1:
+    dependencies:
+      '@kurkle/color': 0.3.4
+
   combined-stream@1.0.8:
     dependencies:
       delayed-stream: 1.0.0
@@ -2275,6 +2300,11 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.7.0
       lightningcss: 1.32.0
+
+  vue-chartjs@5.3.3(chart.js@4.5.1)(vue@3.5.39(typescript@5.9.3)):
+    dependencies:
+      chart.js: 4.5.1
+      vue: 3.5.39(typescript@5.9.3)
 
   vue-i18n@11.4.6(vue@3.5.39(typescript@5.9.3)):
     dependencies:

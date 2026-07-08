@@ -108,6 +108,20 @@ export default {
   langToggle: {
     switchTo: 'EN'
   },
+  ai: {
+    title: 'BrewGuard 助手',
+    welcome: '你好!我是 BrewGuard AI 助手,可以回答关于发酵检测、批次管理、酿造指标等问题。',
+    placeholder: '输入你的问题...',
+    sending: '思考中...',
+    send: '发送',
+    suggestions: [
+      '艾尔发酵的理想温度是多少?',
+      'pH 异常说明什么?',
+      '如何使用批次溯源功能?'
+    ],
+    error: '出了点问题,请重试。',
+    openChat: '打开 AI 助手'
+  },
   admin: {
     brand: 'BrewGuard 管理后台',
     backHome: '首页',
@@ -118,7 +132,26 @@ export default {
     },
     dashboard: {
       title: '仪表盘',
-      comingSoon: '仪表盘即将上线。'
+      overview: '概览',
+      cards: {
+        batchTotal: '批次总数',
+        batchAbnormal: '异常批次',
+        detectionTotal: '检测记录',
+        avgTemp: '平均温度',
+        tempUnit: '°C'
+      },
+      chart: {
+        trendTitle: '检测数据趋势',
+        trendSubtitle: '近 24 小时温度、pH 与酒精度变化',
+        distTitle: '批次状态分布',
+        distSubtitle: '当前各状态批次数量',
+        tempLabel: '温度',
+        phLabel: 'pH',
+        abvLabel: '酒精度',
+        fermenting: '发酵中',
+        completed: '已完成',
+        abnormal: '异常'
+      }
     },
     system: {
       title: '系统管理',
