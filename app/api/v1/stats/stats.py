@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.models.alerts import Alert
 from app.models.batch import Batch
 from app.models.detection import Detection
 from app.schemas import Success
@@ -18,6 +19,9 @@ async def stats_overview():
     # 检测记录统计
     detection_total = await Detection.filter(is_deleted=False).count()
 
+    # 告警统计
+    alert_open = await Alert.filter(is_deleted=False, status="open").count()
+
     # 平均温度(Tortoise annotate + Avg)
     from tortoise.functions import Avg
     avg_temp_result = await Detection.filter(is_deleted=False).annotate(avg_temp=Avg("temperature")).first()
@@ -30,6 +34,7 @@ async def stats_overview():
         "batch_completed": batch_completed,
         "detection_total": detection_total,
         "avg_temperature": avg_temperature,
+        "alert_open": alert_open,
         "status_distribution": {
             "fermenting": batch_fermenting,
             "completed": batch_completed,

@@ -11,6 +11,12 @@ class BaseBatch(BaseModel):
     start_time: Optional[datetime] = Field(None, description="发酵开始时间")
     end_time: Optional[datetime] = Field(None, description="发酵结束时间")
     remark: str = Field("", description="备注")
+    temp_min: Optional[float] = Field(None, description="温度下限(°C)")
+    temp_max: Optional[float] = Field(None, description="温度上限(°C)")
+    ph_min: Optional[float] = Field(None, description="pH下限")
+    ph_max: Optional[float] = Field(None, description="pH上限")
+    abv_min: Optional[float] = Field(None, description="酒精度下限(%)")
+    abv_max: Optional[float] = Field(None, description="酒精度上限(%)")
 
 
 class BatchCreate(BaseBatch):

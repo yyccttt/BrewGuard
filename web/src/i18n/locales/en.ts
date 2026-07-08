@@ -128,6 +128,7 @@ export default {
     menu: {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',
+      alerts: 'Alert Center',
       system: 'System'
     },
     dashboard: {
@@ -138,7 +139,8 @@ export default {
         batchAbnormal: 'Abnormal Batches',
         detectionTotal: 'Detection Records',
         avgTemp: 'Avg Temperature',
-        tempUnit: '°C'
+        tempUnit: '°C',
+        alertOpen: 'Open Alerts'
       },
       chart: {
         trendTitle: 'Detection Data Trend',
@@ -156,6 +158,32 @@ export default {
     system: {
       title: 'System',
       comingSoon: 'System settings coming soon.'
+    },
+    alerts: {
+      title: 'Alert Center',
+      empty: 'No alerts. All metrics within range.',
+      batchId: 'Batch',
+      metric: 'Metric',
+      value: 'Value',
+      threshold: 'Threshold',
+      direction: 'Direction',
+      status: 'Status',
+      time: 'Time',
+      actions: 'Actions',
+      metrics: { temperature: 'Temperature', ph: 'pH', abv: 'ABV' },
+      directions: { high: 'Above limit', low: 'Below limit' },
+      statuses: { open: 'Open', acknowledged: 'Acknowledged', resolved: 'Resolved' },
+      all: 'All',
+      acknowledge: 'Acknowledge',
+      resolve: 'Resolve',
+      acknowledged: 'Alert acknowledged',
+      resolved: 'Alert resolved',
+      thresholdConfig: 'Threshold Config',
+      tempRange: 'Temperature Range (°C)',
+      phRange: 'pH Range',
+      abvRange: 'ABV Range (%)',
+      saveThreshold: 'Save',
+      thresholdSaved: 'Thresholds saved'
     },
     batch: {
       title: 'Fermentation Batches',

@@ -46,6 +46,7 @@ const { t } = useI18n();
 const menuItems = [
   { path: '/admin/dashboard', label: 'admin.menu.dashboard', icon: 'pi pi-chart-line' },
   { path: '/admin/batch', label: 'admin.menu.batch', icon: 'pi pi-tags' },
+  { path: '/admin/alerts', label: 'admin.menu.alerts', icon: 'pi pi-bell' },
   { path: '/admin/system', label: 'admin.menu.system', icon: 'pi pi-cog' }
 ];
 </script>

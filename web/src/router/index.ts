@@ -35,6 +35,11 @@ const router = createRouter({
           component: () => import('@/views/admin/BatchDetail.vue')
         },
         {
+          path: 'alerts',
+          name: 'alerts',
+          component: () => import('@/views/admin/Alerts.vue')
+        },
+        {
           path: 'system',
           name: 'system',
           component: () => import('@/views/admin/System.vue')

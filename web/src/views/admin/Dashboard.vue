@@ -92,6 +92,7 @@ const stats = ref({
   batch_completed: 0,
   detection_total: 0,
   avg_temperature: 0,
+  alert_open: 0,
   status_distribution: { fermenting: 0, completed: 0, abnormal: 0 }
 });
 
@@ -99,7 +100,8 @@ const cards = computed(() => [
   { key: 'batch', icon: 'pi pi-tags', value: stats.value.batch_total, suffix: '', label: 'admin.dashboard.cards.batchTotal' },
   { key: 'abnormal', icon: 'pi pi-exclamation-triangle', value: stats.value.batch_abnormal, suffix: '', label: 'admin.dashboard.cards.batchAbnormal' },
   { key: 'detection', icon: 'pi pi-database', value: stats.value.detection_total, suffix: '', label: 'admin.dashboard.cards.detectionTotal' },
-  { key: 'temp', icon: 'pi pi-sun', value: stats.value.avg_temperature, suffix: t('admin.dashboard.cards.tempUnit'), label: 'admin.dashboard.cards.avgTemp' }
+  { key: 'temp', icon: 'pi pi-sun', value: stats.value.avg_temperature, suffix: t('admin.dashboard.cards.tempUnit'), label: 'admin.dashboard.cards.avgTemp' },
+  { key: 'alert', icon: 'pi pi-bell', value: stats.value.alert_open || 0, suffix: '', label: 'admin.dashboard.cards.alertOpen' }
 ]);
 
 // ===== 模拟趋势数据(24小时) =====
