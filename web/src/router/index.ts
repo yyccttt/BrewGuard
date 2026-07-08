@@ -40,11 +40,36 @@ const router = createRouter({
           component: () => import('@/views/admin/Alerts.vue')
         },
         {
+          path: 'users',
+          name: 'users',
+          component: () => import('@/views/admin/Users.vue')
+        },
+        {
+          path: 'auditlog',
+          name: 'auditlog',
+          component: () => import('@/views/admin/AuditLog.vue')
+        },
+        {
           path: 'system',
           name: 'system',
           component: () => import('@/views/admin/System.vue')
         }
       ]
+    },
+    {
+      path: '/403',
+      name: 'forbidden',
+      component: () => import('@/views/error/Forbidden.vue')
+    },
+    {
+      path: '/500',
+      name: 'server-error',
+      component: () => import('@/views/error/ServerError.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/error/NotFound.vue')
     }
   ]
 });

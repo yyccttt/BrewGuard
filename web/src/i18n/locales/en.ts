@@ -108,6 +108,22 @@ export default {
   langToggle: {
     switchTo: '中文'
   },
+  error: {
+    403: {
+      title: 'Access Denied',
+      desc: 'You do not have permission to view this page. Please contact an administrator for the required role or permissions.'
+    },
+    404: {
+      title: 'Page Not Found',
+      desc: 'The page you are looking for does not exist. It may have been moved or the address mistyped.'
+    },
+    500: {
+      title: 'Server Error',
+      desc: 'Something went wrong on our end. Please try again later, or contact an administrator if it persists.'
+    },
+    backHome: 'Back Home',
+    goBack: 'Go Back'
+  },
   ai: {
     title: 'BrewGuard Assistant',
     welcome: 'Hi! I am the BrewGuard AI assistant. Ask me anything about fermentation detection, batch management, or brewing metrics.',
@@ -129,6 +145,8 @@ export default {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',
       alerts: 'Alert Center',
+      users: 'Users',
+      auditlog: 'Audit Logs',
       system: 'System'
     },
     dashboard: {
@@ -158,6 +176,43 @@ export default {
     system: {
       title: 'System',
       comingSoon: 'System settings coming soon.'
+    },
+    auditlog: {
+      title: 'Audit Logs',
+      empty: 'No logs yet.',
+      username: 'User',
+      module: 'Module',
+      summary: 'Action',
+      method: 'Method',
+      path: 'Path',
+      status: 'Status',
+      responseTime: 'Duration (ms)',
+      time: 'Time',
+      details: 'Details',
+      requestArgs: 'Request Args',
+      responseBody: 'Response'
+    },
+    users: {
+      title: 'User Management',
+      empty: 'No users yet.',
+      add: 'New User',
+      edit: 'Edit',
+      delete: 'Delete',
+      username: 'Username',
+      alias: 'Name',
+      email: 'Email',
+      phone: 'Phone',
+      roles: 'Roles',
+      active: 'Active',
+      inactive: 'Inactive',
+      superuser: 'Super Admin',
+      lastLogin: 'Last Login',
+      actions: 'Actions',
+      password: 'Password',
+      confirmDelete: 'Delete this user?',
+      saveSuccess: 'User saved',
+      deleteSuccess: 'User deleted',
+      status: 'Status'
     },
     alerts: {
       title: 'Alert Center',

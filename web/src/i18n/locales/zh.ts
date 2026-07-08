@@ -108,6 +108,22 @@ export default {
   langToggle: {
     switchTo: 'EN'
   },
+  error: {
+    403: {
+      title: '无权访问',
+      desc: '抱歉,你没有访问该页面的权限。请联系管理员授予相应角色或权限。'
+    },
+    404: {
+      title: '页面走丢了',
+      desc: '你要找的页面不存在,可能已被移除或地址输入有误。'
+    },
+    500: {
+      title: '服务器开小差了',
+      desc: '服务器内部错误,请稍后重试。如问题持续,请联系管理员。'
+    },
+    backHome: '返回首页',
+    goBack: '返回上一页'
+  },
   ai: {
     title: 'BrewGuard 助手',
     welcome: '你好!我是 BrewGuard AI 助手,可以回答关于发酵检测、批次管理、酿造指标等问题。',
@@ -129,6 +145,8 @@ export default {
       dashboard: '仪表盘',
       batch: '发酵批次',
       alerts: '告警中心',
+      users: '用户管理',
+      auditlog: '审计日志',
       system: '系统管理'
     },
     dashboard: {
@@ -158,6 +176,43 @@ export default {
     system: {
       title: '系统管理',
       comingSoon: '系统设置即将上线。'
+    },
+    auditlog: {
+      title: '审计日志',
+      empty: '暂无日志。',
+      username: '用户',
+      module: '模块',
+      summary: '操作',
+      method: '方法',
+      path: '路径',
+      status: '状态码',
+      responseTime: '耗时(ms)',
+      time: '时间',
+      details: '详情',
+      requestArgs: '请求参数',
+      responseBody: '返回数据'
+    },
+    users: {
+      title: '用户管理',
+      empty: '暂无用户。',
+      add: '新建用户',
+      edit: '编辑',
+      delete: '删除',
+      username: '用户名',
+      alias: '姓名',
+      email: '邮箱',
+      phone: '电话',
+      roles: '角色',
+      active: '启用',
+      inactive: '禁用',
+      superuser: '超级管理员',
+      lastLogin: '最后登录',
+      actions: '操作',
+      password: '密码',
+      confirmDelete: '确定删除该用户?',
+      saveSuccess: '用户保存成功',
+      deleteSuccess: '用户删除成功',
+      status: '状态'
     },
     alerts: {
       title: '告警中心',
