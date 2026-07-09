@@ -141,6 +141,11 @@ export default {
   admin: {
     brand: 'BrewGuard Admin',
     backHome: 'Home',
+    theme: {
+      light: 'Light',
+      dark: 'Dark',
+      auto: 'Auto'
+    },
     menu: {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',

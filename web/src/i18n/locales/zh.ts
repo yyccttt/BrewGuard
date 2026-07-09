@@ -141,6 +141,11 @@ export default {
   admin: {
     brand: 'BrewGuard 管理后台',
     backHome: '首页',
+    theme: {
+      light: '亮色模式',
+      dark: '暗色模式',
+      auto: '跟随系统'
+    },
     menu: {
       dashboard: '仪表盘',
       batch: '发酵批次',
