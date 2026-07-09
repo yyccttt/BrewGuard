@@ -19,17 +19,17 @@
     <div class="detail-section">
       <div class="detail-toolbar">
         <h3 class="detail-section-title">{{ t('admin.detection.title') }}</h3>
-        <Button :label="t('admin.detection.add')" icon="pi pi-plus" @click="openCreate" />
+        <Button :label="t('admin.detection.add')" icon="pi pi-plus" @click="crud.openCreate()" />
       </div>
 
       <DataTable
-        :value="records"
-        :loading="loading"
-        :rows="pageSize"
-        :totalRecords="total"
-        :first="(page - 1) * pageSize"
+        :value="crud.list.value"
+        :loading="crud.loading.value"
+        :rows="crud.pageSize.value"
+        :totalRecords="crud.total.value"
+        :first="(crud.page.value - 1) * crud.pageSize.value"
         :lazy="true"
-        @page="onPage"
+        @page="crud.onPage"
         paginator
         :rowsPerPageOptions="[10, 20, 50]"
         class="detail-table"
@@ -41,7 +41,7 @@
         <Column field="created_at" :header="t('admin.detection.createdAt')" />
         <Column :header="t('admin.detection.actions')" style="width: 140px">
           <template #body="{ data }">
-            <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" />
+            <Button icon="pi pi-pencil" text rounded size="small" @click="crud.openEdit(data)" />
             <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDeleteRecord(data)" />
           </template>
         </Column>
@@ -52,28 +52,28 @@
     </div>
 
     <!-- 新建/编辑 Dialog -->
-    <Dialog v-model:visible="formVisible" :header="editing ? t('admin.detection.edit') : t('admin.detection.add')" modal class="detail-dialog">
+    <Dialog v-model:visible="crud.modal.visible.value" :header="crud.editing.value ? t('admin.detection.edit') : t('admin.detection.add')" modal class="detail-dialog">
       <div class="detail-form">
         <div class="detail-form-row">
           <label>{{ t('admin.detection.temperature') }}</label>
-          <InputText v-model.number="form.temperature" type="number" placeholder="22.5" />
+          <InputText v-model.number="crud.form.data.value.temperature" type="number" placeholder="22.5" />
         </div>
         <div class="detail-form-row">
           <label>{{ t('admin.detection.ph') }}</label>
-          <InputText v-model.number="form.ph" type="number" placeholder="4.2" />
+          <InputText v-model.number="crud.form.data.value.ph" type="number" placeholder="4.2" />
         </div>
         <div class="detail-form-row">
           <label>{{ t('admin.detection.abv') }}</label>
-          <InputText v-model.number="form.abv" type="number" placeholder="5.5" />
+          <InputText v-model.number="crud.form.data.value.abv" type="number" placeholder="5.5" />
         </div>
         <div class="detail-form-row">
           <label>{{ t('admin.detection.remark') }}</label>
-          <InputText v-model="form.remark" />
+          <InputText v-model="crud.form.data.value.remark" />
         </div>
       </div>
       <template #footer>
-        <Button label="Save" icon="pi pi-check" @click="submitForm" :loading="submitting" />
-        <Button label="Cancel" icon="pi pi-times" text @click="formVisible = false" />
+        <Button label="Save" icon="pi pi-check" @click="crud.submit()" :loading="crud.modal.loading.value" />
+        <Button label="Cancel" icon="pi pi-times" text @click="crud.modal.close()" />
       </template>
     </Dialog>
 
@@ -94,7 +94,8 @@ import InputText from 'primevue/inputtext';
 import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import ConfirmDialog from 'primevue/confirmdialog';
-import { get, post, del } from '@/utils/http';
+import { get } from '@/utils/http';
+import { useCrud } from '@/composables/useCrud';
 import './BatchDetail.css';
 
 const route = useRoute();
@@ -124,16 +125,20 @@ interface Detection {
 }
 
 const batch = ref<Batch | null>(null);
-const records = ref<Detection[]>([]);
-const loading = ref(false);
-const total = ref(0);
-const page = ref(1);
-const pageSize = ref(20);
 
-const formVisible = ref(false);
-const editing = ref(false);
-const submitting = ref(false);
-const form = ref<Detection>({ batch_id: batchId, temperature: null, ph: null, abv: null, remark: '' });
+// 检测记录的 CRUD 用 useCrud 封装,buildQuery 固定带 batch_id
+const crud = useCrud<Detection>({
+  listUrl: '/detection/list',
+  createUrl: '/detection/create',
+  updateUrl: '/detection/update',
+  deleteUrl: '/detection/delete',
+  initForm: { batch_id: batchId, temperature: null, ph: null, abv: null, remark: '' },
+  buildQuery: () => ({ batch_id: batchId }),
+  messages: {
+    saveSuccess: t('admin.detection.saveSuccess'),
+    deleteSuccess: t('admin.detection.deleteSuccess'),
+  },
+});
 
 function batchSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {
   switch (status) {
@@ -153,74 +158,17 @@ async function loadBatch() {
   }
 }
 
-async function loadRecords() {
-  loading.value = true;
-  try {
-    const res = await get<any>('/detection/list', { page: page.value, page_size: pageSize.value, batch_id: batchId });
-    records.value = res.data || [];
-    total.value = res.total || 0;
-  } catch (e) {
-    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
-  } finally {
-    loading.value = false;
-  }
-}
-
-function onPage(event: any) {
-  page.value = event.page + 1;
-  pageSize.value = event.rows;
-  loadRecords();
-}
-
-function openCreate() {
-  editing.value = false;
-  form.value = { batch_id: batchId, temperature: null, ph: null, abv: null, remark: '' };
-  formVisible.value = true;
-}
-
-function openEdit(data: Detection) {
-  editing.value = true;
-  form.value = { ...data };
-  formVisible.value = true;
-}
-
-async function submitForm() {
-  submitting.value = true;
-  try {
-    if (editing.value && form.value.id) {
-      await post('/detection/update', form.value);
-    } else {
-      await post('/detection/create', form.value);
-    }
-    toast.add({ severity: 'success', summary: 'OK', detail: t('admin.detection.saveSuccess'), life: 3000 });
-    formVisible.value = false;
-    loadRecords();
-  } catch (e) {
-    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
-  } finally {
-    submitting.value = false;
-  }
-}
-
 function confirmDeleteRecord(data: Detection) {
   confirm.require({
     message: t('admin.detection.confirmDelete'),
     header: t('admin.detection.delete'),
     icon: 'pi pi-exclamation-triangle',
-    accept: async () => {
-      try {
-        await del('/detection/delete', { id: data.id });
-        toast.add({ severity: 'success', summary: 'OK', detail: t('admin.detection.deleteSuccess'), life: 3000 });
-        loadRecords();
-      } catch (e) {
-        toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
-      }
-    }
+    accept: () => crud.deleteRow(data),
   });
 }
 
 onMounted(() => {
   loadBatch();
-  loadRecords();
+  crud.refresh();
 });
 </script>
