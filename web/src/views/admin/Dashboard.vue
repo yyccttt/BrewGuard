@@ -69,6 +69,7 @@ import {
 } from 'chart.js';
 import AnimatedContent from '@/content/Animations/AnimatedContent/AnimatedContent.vue';
 import { get } from '@/utils/http';
+import { useWebSocket } from '@/composables/useWebSocket';
 import './Dashboard.css';
 
 ChartJS.register(
@@ -225,5 +226,14 @@ async function loadStats() {
   }
 }
 
-onMounted(loadStats);
+// WebSocket: 收到新检测记录时刷新统计(实时跳数,无需等轮询)
+const { on } = useWebSocket();
+
+onMounted(() => {
+  loadStats();
+  on('detection', () => {
+    // 新检测数据到达,刷新概览统计(批次数/检测数/平均温度/告警等)
+    loadStats();
+  });
+});
 </script>

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Query
 from tortoise.expressions import Q
 
 from app.controllers.detection import detection_controller
+from app.core.ws_manager import manager
 from app.models.alerts import Alert
 from app.models.batch import Batch
 from app.schemas import Success, SuccessExtra
@@ -18,7 +19,7 @@ DEFAULT_THRESHOLDS = {
 
 
 async def check_and_alert(batch_id: int, detection_id: int, temperature, ph, abv):
-    """检查检测值是否超阈值,超了则创建告警"""
+    """检查检测值是否超阈值,超了则创建告警,并实时推送"""
     batch = await Batch.filter(id=batch_id).first()
     if not batch:
         return
@@ -38,15 +39,40 @@ async def check_and_alert(batch_id: int, detection_id: int, temperature, ph, abv
         if value is None:
             continue
         if value > hi:
-            await Alert.create(
+            alert = await Alert.create(
                 batch_id=batch_id, detection_id=detection_id, metric=metric,
                 value=value, threshold=hi, direction="high", status="open"
             )
+            await _push_alert(alert)
         elif value < lo:
-            await Alert.create(
+            alert = await Alert.create(
                 batch_id=batch_id, detection_id=detection_id, metric=metric,
                 value=value, threshold=lo, direction="low", status="open"
             )
+            await _push_alert(alert)
+
+
+async def _push_alert(alert: Alert) -> None:
+    """告警实时推送给所有在线客户端"""
+    await manager.broadcast({
+        "type": "alert",
+        "data": await alert.to_dict(),
+    })
+
+
+async def _push_detection(obj, temperature, ph, abv) -> None:
+    """新检测记录实时推送给所有在线客户端"""
+    await manager.broadcast({
+        "type": "detection",
+        "data": {
+            "id": obj.id,
+            "batch_id": obj.batch_id,
+            "temperature": temperature,
+            "ph": ph,
+            "abv": abv,
+            "created_at": obj.created_at.strftime("%Y-%m-%d %H:%M:%S") if obj.created_at else None,
+        },
+    })
 
 
 @router.get("/list", summary="查看检测记录列表")
@@ -73,6 +99,8 @@ async def get_detection(
 @router.post("/create", summary="创建检测记录")
 async def create_detection(detection_in: DetectionCreate):
     obj = await detection_controller.create(obj_in=detection_in)
+    # 实时推送新检测数值
+    await _push_detection(obj, detection_in.temperature, detection_in.ph, detection_in.abv)
     # 自动检查阈值并触发告警
     await check_and_alert(detection_in.batch_id, obj.id, detection_in.temperature, detection_in.ph, detection_in.abv)
     return Success(msg="Created Successfully")
