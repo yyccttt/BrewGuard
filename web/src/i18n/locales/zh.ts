@@ -227,7 +227,14 @@ export default {
       deleteSuccess: '批次删除成功',
       empty: '暂无批次,点击新建第一个批次。',
       detail: '查看详情',
-      back: '返回批次列表'
+      back: '返回批次列表',
+      exportReport: '导出报告',
+      exportDone: '报告已导出',
+      reportTitle: '批次质检报告',
+      basicInfo: '批次基本信息',
+      detectionRecords: '检测记录',
+      trend: '趋势图(温度 / pH / 酒精度)',
+      generatedAt: '生成时间'
     },
     detection: {
       title: '检测记录',

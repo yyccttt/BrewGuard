@@ -6,7 +6,10 @@
 
     <!-- 批次信息卡 -->
     <div class="detail-batch-card" v-if="batch">
-      <h2 class="detail-batch-title">{{ batch.batch_no }}</h2>
+      <div class="detail-batch-header">
+        <h2 class="detail-batch-title">{{ batch.batch_no }}</h2>
+        <Button :label="t('admin.batch.exportReport')" icon="pi pi-file-pdf" severity="help" size="small" :loading="exporting" @click="exportReport" />
+      </div>
       <div class="detail-batch-meta">
         <span class="detail-meta-item"><i class="pi pi-tag" /> {{ batch.recipe || '-' }}</span>
         <Tag :value="t(`admin.batch.statuses.${batch.status}`)" :severity="batchSeverity(batch.status)" />
@@ -95,6 +98,7 @@ import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import ConfirmDialog from 'primevue/confirmdialog';
 import { get, post, del } from '@/utils/http';
+import { exportBatchReport } from '@/utils/pdfReport';
 import './BatchDetail.css';
 
 const route = useRoute();
@@ -217,6 +221,44 @@ function confirmDeleteRecord(data: Detection) {
       }
     }
   });
+}
+
+// PDF 报告导出:拉取该批次全部检测记录,生成质检报告
+const exporting = ref(false);
+async function exportReport() {
+  if (!batch.value) return;
+  exporting.value = true;
+  try {
+    // 拉取全部记录(不分页),用于完整报告
+    const res = await get<any>('/detection/list', { page: 1, page_size: 10000, batch_id: batchId });
+    const allRecords = res.data || [];
+    await exportBatchReport(
+      batch.value,
+      allRecords,
+      {
+        reportTitle: t('admin.batch.reportTitle'),
+        basicInfo: t('admin.batch.basicInfo'),
+        status: t('admin.batch.status'),
+        startTime: t('admin.batch.startTime'),
+        endTime: t('admin.batch.endTime'),
+        remark: t('admin.batch.remark'),
+        recipe: t('admin.batch.recipe'),
+        detectionRecords: t('admin.batch.detectionRecords'),
+        temperature: t('admin.detection.temperature'),
+        ph: t('admin.detection.ph'),
+        abv: t('admin.detection.abv'),
+        time: t('admin.detection.createdAt'),
+        trend: t('admin.batch.trend'),
+        generatedAt: t('admin.batch.generatedAt'),
+      },
+      t(`admin.batch.statuses.${batch.value.status}`),
+    );
+    toast.add({ severity: 'success', summary: 'OK', detail: t('admin.batch.exportDone'), life: 3000 });
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
+  } finally {
+    exporting.value = false;
+  }
 }
 
 onMounted(() => {

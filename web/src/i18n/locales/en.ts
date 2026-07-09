@@ -227,7 +227,14 @@ export default {
       deleteSuccess: 'Batch deleted successfully',
       empty: 'No batches yet. Create your first one.',
       detail: 'View Details',
-      back: 'Back to Batches'
+      back: 'Back to Batches',
+      exportReport: 'Export Report',
+      exportDone: 'Report exported',
+      reportTitle: 'Batch Quality Report',
+      basicInfo: 'Basic Info',
+      detectionRecords: 'Detection Records',
+      trend: 'Trend (Temperature / pH / ABV)',
+      generatedAt: 'Generated at'
     },
     detection: {
       title: 'Detection Records',
