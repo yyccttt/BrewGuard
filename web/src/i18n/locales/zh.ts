@@ -146,6 +146,14 @@ export default {
       dark: '暗色模式',
       auto: '跟随系统'
     },
+    tab: {
+      closeCurrent: '关闭当前',
+      closeLeft: '关闭左侧',
+      closeRight: '关闭右侧',
+      closeOthers: '关闭其他',
+      closeAll: '关闭全部'
+    },
+    },
     menu: {
       dashboard: '仪表盘',
       batch: '发酵批次',

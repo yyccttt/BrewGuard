@@ -146,6 +146,14 @@ export default {
       dark: 'Dark',
       auto: 'Auto'
     },
+    tab: {
+      closeCurrent: 'Close',
+      closeLeft: 'Close Left',
+      closeRight: 'Close Right',
+      closeOthers: 'Close Others',
+      closeAll: 'Close All'
+    },
+    },
     menu: {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',

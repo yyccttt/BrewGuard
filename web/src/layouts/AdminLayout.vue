@@ -28,22 +28,33 @@
         </div>
       </header>
 
+      <TabBar />
+
       <main class="admin-content">
-        <router-view />
+        <router-view v-slot="{ Component, route }">
+          <keep-alive>
+            <component :is="Component" :key="route.fullPath" />
+          </keep-alive>
+        </router-view>
       </main>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
+import { watch } from 'vue';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import logo from '@/assets/logos/brewguard-logo.svg';
 import LangToggle from '@/components/common/LangToggle.vue';
 import ThemeToggle from '@/components/common/ThemeToggle.vue';
+import TabBar from '@/components/admin/TabBar.vue';
+import { useTabStore } from '@/stores/tabStore';
 import './AdminLayout.css';
 
 const { t } = useI18n();
+const route = useRoute();
+const tabStore = useTabStore();
 
 const menuItems = [
   { path: '/admin/dashboard', label: 'admin.menu.dashboard', icon: 'pi pi-chart-line' },
@@ -51,4 +62,13 @@ const menuItems = [
   { path: '/admin/alerts', label: 'admin.menu.alerts', icon: 'pi pi-bell' },
   { path: '/admin/system', label: 'admin.menu.system', icon: 'pi pi-cog' }
 ];
+
+// 路由变化时自动添加标签
+watch(
+  () => route,
+  (r) => {
+    tabStore.addTab(r, (key, fallback) => t(key) || fallback);
+  },
+  { immediate: true, deep: true }
+);
 </script>
