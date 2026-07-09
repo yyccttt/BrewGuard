@@ -227,7 +227,16 @@ export default {
       deleteSuccess: '批次删除成功',
       empty: '暂无批次,点击新建第一个批次。',
       detail: '查看详情',
-      back: '返回批次列表'
+      back: '返回批次列表',
+      thresholdConfig: '告警阈值配置',
+      thresholdHint: '配置后,该批次的检测记录将按此阈值自动告警;留空则使用系统默认值(温度 18~28、pH 3.5~4.5、酒精度 0~15)。',
+      tempRange: '温度范围 (°C)',
+      phRange: 'pH 范围',
+      abvRange: '酒精度范围 (%)',
+      min: '下限',
+      max: '上限',
+      thresholdInvalid: '下限必须小于上限',
+      thresholdSaved: '阈值已保存'
     },
     detection: {
       title: '检测记录',

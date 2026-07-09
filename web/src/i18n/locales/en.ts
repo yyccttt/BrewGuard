@@ -227,7 +227,16 @@ export default {
       deleteSuccess: 'Batch deleted successfully',
       empty: 'No batches yet. Create your first one.',
       detail: 'View Details',
-      back: 'Back to Batches'
+      back: 'Back to Batches',
+      thresholdConfig: 'Alert Threshold Config',
+      thresholdHint: 'When configured, detections of this batch will be alerted by these thresholds; leave blank to use system defaults (temp 18~28, pH 3.5~4.5, abv 0~15).',
+      tempRange: 'Temperature range (°C)',
+      phRange: 'pH range',
+      abvRange: 'ABV range (%)',
+      min: 'Min',
+      max: 'Max',
+      thresholdInvalid: 'Min must be less than max',
+      thresholdSaved: 'Thresholds saved'
     },
     detection: {
       title: 'Detection Records',
