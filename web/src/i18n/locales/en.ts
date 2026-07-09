@@ -108,6 +108,22 @@ export default {
   langToggle: {
     switchTo: '中文'
   },
+  error: {
+    403: {
+      title: 'Access Denied',
+      desc: 'You do not have permission to view this page. Please contact an administrator for the required role or permissions.'
+    },
+    404: {
+      title: 'Page Not Found',
+      desc: 'The page you are looking for does not exist. It may have been moved or the address mistyped.'
+    },
+    500: {
+      title: 'Server Error',
+      desc: 'Something went wrong on our end. Please try again later, or contact an administrator if it persists.'
+    },
+    backHome: 'Back Home',
+    goBack: 'Go Back'
+  },
   ai: {
     title: 'BrewGuard Assistant',
     welcome: 'Hi! I am the BrewGuard AI assistant. Ask me anything about fermentation detection, batch management, or brewing metrics.',

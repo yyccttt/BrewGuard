@@ -108,6 +108,22 @@ export default {
   langToggle: {
     switchTo: 'EN'
   },
+  error: {
+    403: {
+      title: '无权访问',
+      desc: '抱歉,你没有访问该页面的权限。请联系管理员授予相应角色或权限。'
+    },
+    404: {
+      title: '页面走丢了',
+      desc: '你要找的页面不存在,可能已被移除或地址输入有误。'
+    },
+    500: {
+      title: '服务器开小差了',
+      desc: '服务器内部错误,请稍后重试。如问题持续,请联系管理员。'
+    },
+    backHome: '返回首页',
+    goBack: '返回上一页'
+  },
   ai: {
     title: 'BrewGuard 助手',
     welcome: '你好!我是 BrewGuard AI 助手,可以回答关于发酵检测、批次管理、酿造指标等问题。',
