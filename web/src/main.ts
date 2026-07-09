@@ -12,6 +12,7 @@ import { definePreset } from '@primeuix/themes';
 import App from './App.vue';
 import router from './router';
 import i18n from './i18n';
+import permission from './directives/permission';
 
 // 把品牌色 #7cff67 注入 PrimeVue Aura 主题
 const BrewGuardPreset = definePreset(Aura, {
@@ -48,4 +49,5 @@ app.use(PrimeVue, {
 app.use(ToastService);
 app.use(ConfirmationService);
 app.directive('tooltip', Tooltip);
+app.directive('permission', permission);
 app.mount('#app');
