@@ -153,7 +153,6 @@ export default {
       closeOthers: 'Close Others',
       closeAll: 'Close All'
     },
-    },
     menu: {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',

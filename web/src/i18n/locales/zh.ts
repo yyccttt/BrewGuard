@@ -153,7 +153,6 @@ export default {
       closeOthers: '关闭其他',
       closeAll: '关闭全部'
     },
-    },
     menu: {
       dashboard: '仪表盘',
       batch: '发酵批次',
