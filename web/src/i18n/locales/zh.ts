@@ -236,7 +236,14 @@ export default {
       min: '下限',
       max: '上限',
       thresholdInvalid: '下限必须小于上限',
-      thresholdSaved: '阈值已保存'
+      thresholdSaved: '阈值已保存',
+      exportReport: '导出报告',
+      exportDone: '报告已导出',
+      reportTitle: '批次质检报告',
+      basicInfo: '批次基本信息',
+      detectionRecords: '检测记录',
+      trend: '趋势图(温度 / pH / 酒精度)',
+      generatedAt: '生成时间'
     },
     detection: {
       title: '检测记录',

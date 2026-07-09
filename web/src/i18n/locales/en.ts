@@ -236,7 +236,14 @@ export default {
       min: 'Min',
       max: 'Max',
       thresholdInvalid: 'Min must be less than max',
-      thresholdSaved: 'Thresholds saved'
+      thresholdSaved: 'Thresholds saved',
+      exportReport: 'Export Report',
+      exportDone: 'Report exported',
+      reportTitle: 'Batch Quality Report',
+      basicInfo: 'Basic Info',
+      detectionRecords: 'Detection Records',
+      trend: 'Trend (Temperature / pH / ABV)',
+      generatedAt: 'Generated at'
     },
     detection: {
       title: 'Detection Records',
