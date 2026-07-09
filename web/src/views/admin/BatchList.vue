@@ -60,6 +60,36 @@
           <label>{{ t('admin.batch.remark') }}</label>
           <InputText v-model="form.remark" />
         </div>
+
+        <!-- 告警阈值配置区 -->
+        <div class="batch-threshold">
+          <div class="batch-threshold-title">{{ t('admin.batch.thresholdConfig') }}</div>
+          <div class="batch-threshold-hint">{{ t('admin.batch.thresholdHint') }}</div>
+          <div class="batch-threshold-row">
+            <span class="batch-threshold-label">{{ t('admin.batch.tempRange') }}</span>
+            <div class="batch-threshold-inputs">
+              <InputNumber v-model="form.temp_min" :placeholder="t('admin.batch.min')" :maxFractionDigits="2" />
+              <span class="batch-threshold-sep">~</span>
+              <InputNumber v-model="form.temp_max" :placeholder="t('admin.batch.max')" :maxFractionDigits="2" />
+            </div>
+          </div>
+          <div class="batch-threshold-row">
+            <span class="batch-threshold-label">{{ t('admin.batch.phRange') }}</span>
+            <div class="batch-threshold-inputs">
+              <InputNumber v-model="form.ph_min" :placeholder="t('admin.batch.min')" :maxFractionDigits="2" />
+              <span class="batch-threshold-sep">~</span>
+              <InputNumber v-model="form.ph_max" :placeholder="t('admin.batch.max')" :maxFractionDigits="2" />
+            </div>
+          </div>
+          <div class="batch-threshold-row">
+            <span class="batch-threshold-label">{{ t('admin.batch.abvRange') }}</span>
+            <div class="batch-threshold-inputs">
+              <InputNumber v-model="form.abv_min" :placeholder="t('admin.batch.min')" :maxFractionDigits="2" />
+              <span class="batch-threshold-sep">~</span>
+              <InputNumber v-model="form.abv_max" :placeholder="t('admin.batch.max')" :maxFractionDigits="2" />
+            </div>
+          </div>
+        </div>
       </div>
       <template #footer>
         <Button :label="t('admin.batch.save') || 'Save'" icon="pi pi-check" @click="submitForm" :loading="submitting" />
@@ -82,6 +112,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
 import Select from 'primevue/select';
 import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
@@ -102,6 +133,12 @@ interface Batch {
   start_time: string | null;
   end_time: string | null;
   remark: string;
+  temp_min: number | null;
+  temp_max: number | null;
+  ph_min: number | null;
+  ph_max: number | null;
+  abv_min: number | null;
+  abv_max: number | null;
 }
 
 const batches = ref<Batch[]>([]);
@@ -114,7 +151,24 @@ const searchNo = ref('');
 const formVisible = ref(false);
 const editing = ref(false);
 const submitting = ref(false);
-const form = ref<Batch>({ batch_no: '', recipe: '', status: 'fermenting', start_time: null, end_time: null, remark: '' });
+const form = ref<Batch>(defaultForm());
+
+function defaultForm(): Batch {
+  return {
+    batch_no: '',
+    recipe: '',
+    status: 'fermenting',
+    start_time: null,
+    end_time: null,
+    remark: '',
+    temp_min: null,
+    temp_max: null,
+    ph_min: null,
+    ph_max: null,
+    abv_min: null,
+    abv_max: null,
+  };
+}
 
 const statusOptions = computed(() => [
   { label: t('admin.batch.statuses.fermenting'), value: 'fermenting' },
@@ -156,17 +210,40 @@ function goDetail(data: Batch) {
 
 function openCreate() {
   editing.value = false;
-  form.value = { batch_no: '', recipe: '', status: 'fermenting', start_time: null, end_time: null, remark: '' };
+  form.value = defaultForm();
   formVisible.value = true;
 }
 
 function openEdit(data: Batch) {
   editing.value = true;
-  form.value = { ...data };
+  // 编辑时补齐阈值字段(后端未配置时可能缺失),避免 InputNumber 绑定 undefined
+  form.value = { ...defaultForm(), ...data };
   formVisible.value = true;
 }
 
+// 校验阈值:min 必须小于 max(两者都填了才校验)
+function validateThresholds(): string | null {
+  const f = form.value;
+  const pairs: [number | null, number | null][] = [
+    [f.temp_min, f.temp_max],
+    [f.ph_min, f.ph_max],
+    [f.abv_min, f.abv_max],
+  ];
+  for (const [min, max] of pairs) {
+    if (min !== null && min !== undefined && max !== null && max !== undefined && Number(min) >= Number(max)) {
+      return t('admin.batch.thresholdInvalid');
+    }
+  }
+  return null;
+}
+
 async function submitForm() {
+  // 提交前校验阈值
+  const err = validateThresholds();
+  if (err) {
+    toast.add({ severity: 'warn', summary: 'Validation', detail: err, life: 3000 });
+    return;
+  }
   submitting.value = true;
   try {
     if (editing.value && form.value.id) {
