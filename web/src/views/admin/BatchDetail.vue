@@ -19,7 +19,7 @@
     <div class="detail-section">
       <div class="detail-toolbar">
         <h3 class="detail-section-title">{{ t('admin.detection.title') }}</h3>
-        <Button :label="t('admin.detection.add')" icon="pi pi-plus" @click="openCreate" />
+        <Button :label="t('admin.detection.add')" icon="pi pi-plus" @click="openCreate" v-permission="'detection:create'" />
       </div>
 
       <DataTable
@@ -41,8 +41,8 @@
         <Column field="created_at" :header="t('admin.detection.createdAt')" />
         <Column :header="t('admin.detection.actions')" style="width: 140px">
           <template #body="{ data }">
-            <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" />
-            <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDeleteRecord(data)" />
+            <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" v-permission="'detection:update'" />
+            <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDeleteRecord(data)" v-permission="'detection:delete'" />
           </template>
         </Column>
         <template #empty>

@@ -4,7 +4,7 @@
       <h1 class="batch-title">{{ t('admin.batch.title') }}</h1>
       <div class="batch-toolbar-actions">
         <InputText v-model="searchNo" :placeholder="t('admin.batch.search')" @keyup.enter="loadList" class="batch-search" />
-        <Button :label="t('admin.batch.add')" icon="pi pi-plus" @click="openCreate" />
+        <Button :label="t('admin.batch.add')" icon="pi pi-plus" @click="openCreate" v-permission="'batch:create'" />
       </div>
     </div>
 
@@ -32,8 +32,8 @@
       <Column :header="t('admin.batch.actions')" style="width: 180px">
         <template #body="{ data }">
           <Button icon="pi pi-eye" text rounded size="small" @click="goDetail(data)" v-tooltip.top="t('admin.batch.detail')" />
-          <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" />
-          <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDelete(data)" />
+          <Button icon="pi pi-pencil" text rounded size="small" @click="openEdit(data)" v-permission="'batch:update'" />
+          <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="confirmDelete(data)" v-permission="'batch:delete'" />
         </template>
       </Column>
       <template #empty>
