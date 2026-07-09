@@ -40,16 +40,6 @@ const router = createRouter({
           component: () => import('@/views/admin/Alerts.vue')
         },
         {
-          path: 'users',
-          name: 'users',
-          component: () => import('@/views/admin/Users.vue')
-        },
-        {
-          path: 'auditlog',
-          name: 'auditlog',
-          component: () => import('@/views/admin/AuditLog.vue')
-        },
-        {
           path: 'system',
           name: 'system',
           component: () => import('@/views/admin/System.vue')

@@ -145,8 +145,6 @@ export default {
       dashboard: '仪表盘',
       batch: '发酵批次',
       alerts: '告警中心',
-      users: '用户管理',
-      auditlog: '审计日志',
       system: '系统管理'
     },
     dashboard: {
@@ -178,43 +176,6 @@ export default {
     system: {
       title: '系统管理',
       comingSoon: '系统设置即将上线。'
-    },
-    auditlog: {
-      title: '审计日志',
-      empty: '暂无日志。',
-      username: '用户',
-      module: '模块',
-      summary: '操作',
-      method: '方法',
-      path: '路径',
-      status: '状态码',
-      responseTime: '耗时(ms)',
-      time: '时间',
-      details: '详情',
-      requestArgs: '请求参数',
-      responseBody: '返回数据'
-    },
-    users: {
-      title: '用户管理',
-      empty: '暂无用户。',
-      add: '新建用户',
-      edit: '编辑',
-      delete: '删除',
-      username: '用户名',
-      alias: '姓名',
-      email: '邮箱',
-      phone: '电话',
-      roles: '角色',
-      active: '启用',
-      inactive: '禁用',
-      superuser: '超级管理员',
-      lastLogin: '最后登录',
-      actions: '操作',
-      password: '密码',
-      confirmDelete: '确定删除该用户?',
-      saveSuccess: '用户保存成功',
-      deleteSuccess: '用户删除成功',
-      status: '状态'
     },
     alerts: {
       title: '告警中心',

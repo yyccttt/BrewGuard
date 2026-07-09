@@ -145,8 +145,6 @@ export default {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',
       alerts: 'Alert Center',
-      users: 'Users',
-      auditlog: 'Audit Logs',
       system: 'System'
     },
     dashboard: {
@@ -178,43 +176,6 @@ export default {
     system: {
       title: 'System',
       comingSoon: 'System settings coming soon.'
-    },
-    auditlog: {
-      title: 'Audit Logs',
-      empty: 'No logs yet.',
-      username: 'User',
-      module: 'Module',
-      summary: 'Action',
-      method: 'Method',
-      path: 'Path',
-      status: 'Status',
-      responseTime: 'Duration (ms)',
-      time: 'Time',
-      details: 'Details',
-      requestArgs: 'Request Args',
-      responseBody: 'Response'
-    },
-    users: {
-      title: 'User Management',
-      empty: 'No users yet.',
-      add: 'New User',
-      edit: 'Edit',
-      delete: 'Delete',
-      username: 'Username',
-      alias: 'Name',
-      email: 'Email',
-      phone: 'Phone',
-      roles: 'Roles',
-      active: 'Active',
-      inactive: 'Inactive',
-      superuser: 'Super Admin',
-      lastLogin: 'Last Login',
-      actions: 'Actions',
-      password: 'Password',
-      confirmDelete: 'Delete this user?',
-      saveSuccess: 'User saved',
-      deleteSuccess: 'User deleted',
-      status: 'Status'
     },
     alerts: {
       title: 'Alert Center',
