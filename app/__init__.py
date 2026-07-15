@@ -35,6 +35,10 @@ def create_app() -> FastAPI:
     )
     register_exceptions(app)
     register_routers(app, prefix="/api")
+    # WebSocket 路由挂在根路径(不走 /api,避免中间件干扰)
+    from app.api.v1.ws import ws_router
+
+    app.include_router(ws_router)
     return app
 
 

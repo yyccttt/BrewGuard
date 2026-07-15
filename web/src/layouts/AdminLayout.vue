@@ -22,6 +22,7 @@
       <header class="admin-header">
         <div class="admin-header-title">{{ t('admin.brand') }}</div>
         <div class="admin-header-actions">
+          <NotificationBell />
           <ThemeToggle />
           <LangToggle />
           <a class="admin-back-home" href="/">{{ t('admin.backHome') }}</a>
@@ -48,6 +49,7 @@ import { useI18n } from 'vue-i18n';
 import logo from '@/assets/logos/brewguard-logo.svg';
 import LangToggle from '@/components/common/LangToggle.vue';
 import ThemeToggle from '@/components/common/ThemeToggle.vue';
+import NotificationBell from '@/components/common/NotificationBell.vue';
 import TabBar from '@/components/admin/TabBar.vue';
 import { useTabStore } from '@/stores/tabStore';
 import './AdminLayout.css';

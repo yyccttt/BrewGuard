@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import DataTable from 'primevue/datatable';
@@ -46,6 +46,7 @@ import Button from 'primevue/button';
 import Select from 'primevue/select';
 import Tag from 'primevue/tag';
 import { get, post } from '@/utils/http';
+import { useSharedWebSocket } from '@/composables/useWebSocket';
 import './Alerts.css';
 
 const { t } = useI18n();
@@ -116,5 +117,30 @@ async function doResolve(data: AlertItem) {
   }
 }
 
-onMounted(loadList);
+// WebSocket:收到新告警时 Toast 弹出 + 列表头部追加
+const ws = useSharedWebSocket();
+let offAlert: (() => void) | null = null;
+
+onMounted(() => {
+  loadList();
+  offAlert = ws.on('alert', (payload) => {
+    const metricText = t(`admin.alerts.metrics.${payload.metric}`);
+    const dirText = t(`admin.alerts.directions.${payload.direction}`);
+    toast.add({
+      severity: payload.direction === 'high' ? 'error' : 'warn',
+      summary: t('admin.alerts.title'),
+      detail: `${payload.batch_no || ('#' + payload.batch_id)} ${metricText} ${payload.value} (${dirText})`,
+      life: 5000,
+    });
+    if (!statusFilter.value || statusFilter.value === 'open') {
+      alerts.value.unshift({
+        id: payload.id, batch_id: payload.batch_id, metric: payload.metric,
+        value: payload.value, threshold: payload.threshold, direction: payload.direction,
+        status: payload.status, created_at: payload.created_at || new Date().toISOString(),
+      });
+    }
+  });
+});
+
+onUnmounted(() => { if (offAlert) offAlert(); });
 </script>

@@ -1,4 +1,25 @@
 export default {
+  common: {
+    commandPalette: {
+      placeholder: 'Search menu or batch no...',
+      empty: 'No results',
+      navigate: 'Navigate',
+      select: 'Select',
+      close: 'Close',
+      typeMenu: 'Menu',
+      typeBatch: 'Batch',
+      batchDesc: 'Go to batch detail',
+    },
+    notification: {
+      title: 'Notifications',
+      empty: 'No notifications',
+      markAllRead: 'Mark all read',
+      viewAll: 'View all alerts',
+      severe: 'Severe',
+      warning: 'Warning',
+      info: 'Info',
+    },
+  },
   hero: {
     badge: 'New',
     platform: 'Intelligent Fermentation Monitoring',
@@ -177,6 +198,8 @@ export default {
         trendSubtitle: 'Temperature, pH and ABV over the last 24 hours',
         distTitle: 'Batch Status Distribution',
         distSubtitle: 'Current batches by status',
+        tempGauge: 'Realtime Temperature',
+        tempGaugeSub: 'Average fermentation temperature across batches',
         tempLabel: 'Temperature',
         phLabel: 'pH',
         abvLabel: 'ABV',

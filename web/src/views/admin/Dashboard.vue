@@ -49,8 +49,20 @@
           <i class="pi pi-chart-line" />
           <p>{{ t('admin.dashboard.noTrendData') }}</p>
         </div>
-        <Line v-else :data="trendData" :options="trendOptions" />
+        <EChart v-else :option="trendOption" height="100%" />
       </div>
+    </div>
+
+    <!-- 实时温度 Gauge 仪表盘 -->
+    <div class="dash-chart-card">
+      <div class="dash-chart-header">
+        <div>
+          <h3 class="dash-chart-title">{{ t('admin.dashboard.chart.tempGauge') }}</h3>
+          <p class="dash-chart-subtitle">{{ t('admin.dashboard.chart.tempGaugeSub') }}</p>
+        </div>
+        <span v-if="statsLoaded" class="dash-live-tag"><span class="dash-live-dot" />{{ t('admin.dashboard.live') }}</span>
+      </div>
+      <EChart :option="tempGaugeOption" height="260px" />
     </div>
 
     <!-- 批次状态分布环形图(真实数据) -->
@@ -80,7 +92,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Line, Doughnut } from 'vue-chartjs';
+import { Doughnut } from 'vue-chartjs';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -95,7 +107,9 @@ import {
 import Skeleton from 'primevue/skeleton';
 import AnimatedContent from '@/content/Animations/AnimatedContent/AnimatedContent.vue';
 import CountUp from '@/content/TextAnimations/CountUp/CountUp.vue';
+import EChart from '@/components/common/EChart.vue';
 import { get } from '@/utils/http';
+import { useSharedWebSocket } from '@/composables/useWebSocket';
 import './Dashboard.css';
 
 ChartJS.register(
@@ -146,79 +160,69 @@ const trendEmpty = computed(() =>
   trendLoaded.value && trendPoints.value.every(p => p.temperature === null && p.ph === null && p.abv === null)
 );
 
-// Chart.js 需要数字,null 会被忽略以断开折线
+// 折线数据:null 会被忽略以断开折线
 const toSeries = (key: 'temperature' | 'ph' | 'abv') =>
   trendPoints.value.map(p => (p[key] === null ? null : p[key]));
 
-const trendData = computed(() => ({
-  labels: trendLabels.value,
-  datasets: [
+// ECharts 趋势图 option(支持 dataZoom 拖动缩放时间轴 + 双 Y 轴)
+const trendOption = computed(() => ({
+  backgroundColor: 'transparent',
+  tooltip: {
+    trigger: 'axis',
+    backgroundColor: 'rgba(15,15,15,0.95)',
+    borderColor: 'rgba(255,255,255,0.1)',
+    textStyle: { color: '#fff' },
+  },
+  legend: {
+    data: [t('admin.dashboard.chart.tempLabel'), t('admin.dashboard.chart.phLabel'), t('admin.dashboard.chart.abvLabel')],
+    textStyle: { color: 'rgba(255,255,255,0.7)' },
+    top: 0,
+  },
+  grid: { left: 50, right: 50, top: 40, bottom: 60 },
+  xAxis: {
+    type: 'category',
+    data: trendLabels.value,
+    axisLabel: { color: 'rgba(255,255,255,0.4)' },
+    axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+  },
+  yAxis: [
     {
-      label: t('admin.dashboard.chart.tempLabel'),
-      data: toSeries('temperature'),
-      borderColor: '#7cff67',
-      backgroundColor: 'rgba(124,255,103,0.1)',
-      tension: 0.4,
-      fill: true,
-      yAxisID: 'y',
-      spanGaps: true
+      type: 'value', name: '温度/酒精度',
+      axisLabel: { color: 'rgba(255,255,255,0.4)' },
+      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.04)' } },
     },
     {
-      label: t('admin.dashboard.chart.phLabel'),
-      data: toSeries('ph'),
-      borderColor: '#5b9dff',
-      backgroundColor: 'rgba(91,157,255,0.05)',
-      tension: 0.4,
-      fill: false,
-      yAxisID: 'y1',
-      spanGaps: true
+      type: 'value', name: 'pH',
+      axisLabel: { color: 'rgba(91,157,255,0.6)' },
+      splitLine: { show: false },
     },
-    {
-      label: t('admin.dashboard.chart.abvLabel'),
-      data: toSeries('abv'),
-      borderColor: '#ffb347',
-      backgroundColor: 'rgba(255,179,71,0.05)',
-      tension: 0.4,
-      fill: false,
-      yAxisID: 'y',
-      spanGaps: true
-    }
-  ]
+  ],
+  dataZoom: [
+    { type: 'inside', start: 0, end: 100 },
+    { type: 'slider', height: 18, bottom: 8, start: 0, end: 100 },
+  ],
+  series: [
+    { name: t('admin.dashboard.chart.tempLabel'), type: 'line', smooth: true, data: toSeries('temperature'), connectNulls: true, itemStyle: { color: '#7cff67' }, areaStyle: { color: 'rgba(124,255,103,0.1)' } },
+    { name: t('admin.dashboard.chart.phLabel'), type: 'line', smooth: true, yAxisIndex: 1, data: toSeries('ph'), connectNulls: true, itemStyle: { color: '#5b9dff' } },
+    { name: t('admin.dashboard.chart.abvLabel'), type: 'line', smooth: true, data: toSeries('abv'), connectNulls: true, itemStyle: { color: '#ffb347' } },
+  ],
 }));
 
-const trendOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: { mode: 'index' as const, intersect: false },
-  plugins: {
-    legend: {
-      labels: { color: 'rgba(255,255,255,0.7)', font: { size: 12, family: 'Geist' }, usePointStyle: true, pointStyle: 'circle' as const }
-    },
-    tooltip: {
-      backgroundColor: 'rgba(15,15,15,0.95)',
-      titleColor: '#fff',
-      bodyColor: 'rgba(255,255,255,0.8)',
-      borderColor: 'rgba(255,255,255,0.1)',
-      borderWidth: 1
-    }
-  },
-  scales: {
-    x: {
-      grid: { color: 'rgba(255,255,255,0.04)' },
-      ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 11, family: 'Geist Mono' }, maxTicksLimit: 12 }
-    },
-    y: {
-      position: 'left' as const,
-      grid: { color: 'rgba(255,255,255,0.04)' },
-      ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 11, family: 'Geist Mono' } }
-    },
-    y1: {
-      position: 'right' as const,
-      grid: { display: false },
-      ticks: { color: 'rgba(91,157,255,0.6)', font: { size: 11, family: 'Geist Mono' } }
-    }
-  }
-};
+// 温度 Gauge 仪表盘:实时平均温度(范围 0~40°C)
+const tempGaugeOption = computed(() => ({
+  backgroundColor: 'transparent',
+  series: [{
+    type: 'gauge', min: 0, max: 40,
+    progress: { show: true, width: 14, itemStyle: { color: '#7cff67' } },
+    axisLine: { lineStyle: { width: 14, color: [[0.45, '#5b9dff'], [0.7, '#7cff67'], [1, '#ff6b6b']] } },
+    pointer: { itemStyle: { color: '#fff' } },
+    axisTick: { show: false },
+    splitLine: { length: 12, lineStyle: { color: 'rgba(255,255,255,0.3)' } },
+    axisLabel: { color: 'rgba(255,255,255,0.4)', distance: -32, fontSize: 10 },
+    detail: { valueAnimation: true, formatter: '{value} °C', color: '#fff', fontSize: 22, offsetCenter: [0, '70%'] },
+    data: [{ value: Number(stats.value.avg_temperature?.toFixed(1)) || 0 }],
+  }],
+}));
 
 // ===== 环形图(真实数据) =====
 const distColors = { fermenting: '#7cff67', completed: '#5b9dff', abnormal: '#ff6b6b' };
@@ -294,15 +298,20 @@ async function refreshAll() {
 
 let timer: ReturnType<typeof setInterval> | null = null;
 
+// WebSocket:收到新检测数值时立即刷新(轮询保留兜底)
+const ws = useSharedWebSocket();
+let offDetection: (() => void) | null = null;
+
 onMounted(() => {
   statsLoading.value = true;
   trendLoading.value = true;
   refreshAll();
-  // 30 秒自动轮询刷新
   timer = setInterval(refreshAll, REFRESH_MS);
+  offDetection = ws.on('detection', () => { refreshAll(); });
 });
 
 onUnmounted(() => {
   if (timer) clearInterval(timer);
+  if (offDetection) offDetection();
 });
 </script>
