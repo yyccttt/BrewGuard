@@ -11,6 +11,12 @@ const router = createRouter({
       component: LandingPage
     },
     {
+      path: '/screen',
+      name: 'screen',
+      // 车间投屏大屏(独立全屏布局,不套 AdminLayout)
+      component: () => import('@/views/screen/Screen.vue')
+    },
+    {
       path: '/admin',
       component: () => import('@/layouts/AdminLayout.vue'),
       meta: { requiresAuth: true },

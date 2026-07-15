@@ -2,7 +2,7 @@ from fastapi import APIRouter, Query
 from tortoise.expressions import Q
 
 from app.controllers.detection import detection_controller
-from app.core.ws_manager import manager
+from app.core.websocket import manager
 from app.models.alerts import Alert
 from app.models.batch import Batch
 from app.schemas import Success, SuccessExtra
@@ -19,12 +19,11 @@ DEFAULT_THRESHOLDS = {
 
 
 async def check_and_alert(batch_id: int, detection_id: int, temperature, ph, abv):
-    """检查检测值是否超阈值,超了则创建告警,并实时推送"""
+    """检查检测值是否超阈值,超了则创建告警,并通过 WebSocket 实时推送"""
     batch = await Batch.filter(id=batch_id).first()
     if not batch:
         return
 
-    # 取批次阈值,未配置则用默认
     def threshold(field):
         val = getattr(batch, field, None)
         return val if val is not None else DEFAULT_THRESHOLDS[field]
@@ -35,6 +34,7 @@ async def check_and_alert(batch_id: int, detection_id: int, temperature, ph, abv
         ("abv", abv, threshold("abv_min"), threshold("abv_max")),
     ]
 
+    new_alerts = []
     for metric, value, lo, hi in checks:
         if value is None:
             continue
@@ -43,36 +43,25 @@ async def check_and_alert(batch_id: int, detection_id: int, temperature, ph, abv
                 batch_id=batch_id, detection_id=detection_id, metric=metric,
                 value=value, threshold=hi, direction="high", status="open"
             )
-            await _push_alert(alert)
+            new_alerts.append((alert, metric, value, hi, "high"))
         elif value < lo:
             alert = await Alert.create(
                 batch_id=batch_id, detection_id=detection_id, metric=metric,
                 value=value, threshold=lo, direction="low", status="open"
             )
-            await _push_alert(alert)
+            new_alerts.append((alert, metric, value, lo, "low"))
 
-
-async def _push_alert(alert: Alert) -> None:
-    """告警实时推送给所有在线客户端"""
-    await manager.broadcast({
-        "type": "alert",
-        "data": await alert.to_dict(),
-    })
-
-
-async def _push_detection(obj, temperature, ph, abv) -> None:
-    """新检测记录实时推送给所有在线客户端"""
-    await manager.broadcast({
-        "type": "detection",
-        "data": {
-            "id": obj.id,
-            "batch_id": obj.batch_id,
-            "temperature": temperature,
-            "ph": ph,
-            "abv": abv,
-            "created_at": obj.created_at.strftime("%Y-%m-%d %H:%M:%S") if obj.created_at else None,
-        },
-    })
+    # 实时推送告警给所有在线客户端
+    for alert, metric, value, threshold_val, direction in new_alerts:
+        await manager.broadcast_json({
+            "type": "alert",
+            "payload": {
+                "id": alert.id, "batch_id": batch_id, "batch_no": batch.batch_no,
+                "metric": metric, "value": value, "threshold": threshold_val,
+                "direction": direction, "status": "open",
+                "created_at": str(alert.created_at) if hasattr(alert, "created_at") else None,
+            },
+        })
 
 
 @router.get("/list", summary="查看检测记录列表")
@@ -99,9 +88,18 @@ async def get_detection(
 @router.post("/create", summary="创建检测记录")
 async def create_detection(detection_in: DetectionCreate):
     obj = await detection_controller.create(obj_in=detection_in)
-    # 实时推送新检测数值
-    await _push_detection(obj, detection_in.temperature, detection_in.ph, detection_in.abv)
-    # 自动检查阈值并触发告警
+    # 推送实时检测数值给在线客户端(仪表盘实时跳动)
+    batch = await Batch.filter(id=detection_in.batch_id).first()
+    await manager.broadcast_json({
+        "type": "detection",
+        "payload": {
+            "id": obj.id, "batch_id": detection_in.batch_id,
+            "batch_no": batch.batch_no if batch else None,
+            "temperature": detection_in.temperature, "ph": detection_in.ph,
+            "abv": detection_in.abv, "remark": detection_in.remark,
+        },
+    })
+    # 自动检查阈值并触发告警(内部会推送告警消息)
     await check_and_alert(detection_in.batch_id, obj.id, detection_in.temperature, detection_in.ph, detection_in.abv)
     return Success(msg="Created Successfully")
 

@@ -1,200 +1,119 @@
-/**
- * WebSocket composable —— BrewGuard 实时通信客户端
- *
- * 设计要点:
- * - 全局单例:多个组件调用 useWebSocket() 共享同一个连接,避免重复建连
- * - 自动重连:指数退避(1s→2s→4s→8s→16s),最多 5 次,超 5 次放弃
- * - 心跳保活:每 30s 发 ping,服务端回 pong;3 次没收到 pong 认定断连重连
- * - 按消息 type 分发:订阅者注册 (type, handler),收到对应消息时回调
- * - token 来自 utils/auth,与 HTTP 请求同源(后端用 token query 鉴权)
- *
- * 用法:
- *   const { on, off, status } = useWebSocket()
- *   on('alert', (alertData) => { ... })
- *   on('detection', (detectionData) => { ... })
- */
-import { ref, onUnmounted } from 'vue'
-import { getToken } from '@/utils/auth'
-
-type WsStatus = 'connecting' | 'open' | 'closed'
-
-interface WsMessage {
-  type: string
-  data?: any
-}
-
-type MessageHandler = (data: any) => void
-
-// ===== 全局单例状态(模块级,所有 useWebSocket 调用共享) =====
-let ws: WebSocket | null = null
-let reconnectAttempts = 0
-let reconnectTimer: ReturnType<typeof setTimeout> | null = null
-let heartbeatTimer: ReturnType<typeof setInterval> | null = null
-let missedPongs = 0
-let manualClose = false
-
-const status = ref<WsStatus>('closed')
-const handlers = new Map<string, Set<MessageHandler>>()
-// 记录已注册的组件卸载清理函数数量,用于判断是否还有活跃订阅
-let activeSubscribers = 0
-
-const MAX_RECONNECT = 5
-const HEARTBEAT_INTERVAL = 30_000
-const MAX_MISSED_PONGS = 3
-
-function getWsUrl(): string {
-  const token = getToken()
-  const proto = window.location.protocol === 'https:' ? 'wss' : 'ws'
-  return `${proto}://${window.location.host}/ws?token=${encodeURIComponent(token)}`
-}
-
-function clearTimers() {
-  if (reconnectTimer) {
-    clearTimeout(reconnectTimer)
-    reconnectTimer = null
-  }
-  if (heartbeatTimer) {
-    clearInterval(heartbeatTimer)
-    heartbeatTimer = null
-  }
-}
-
-function startHeartbeat() {
-  if (heartbeatTimer) clearInterval(heartbeatTimer)
-  missedPongs = 0
-  heartbeatTimer = setInterval(() => {
-    if (!ws || ws.readyState !== WebSocket.OPEN) return
-    // 3 次没收到 pong,认定连接已死,主动关闭触发重连
-    if (missedPongs >= MAX_MISSED_PONGS) {
-      ws.close()
-      return
-    }
-    ws.send(JSON.stringify({ type: 'ping' }))
-    missedPongs++
-  }, HEARTBEAT_INTERVAL)
-}
-
-function scheduleReconnect() {
-  if (manualClose) return
-  if (reconnectAttempts >= MAX_RECONNECT) return
-  reconnectAttempts++
-  // 指数退避:1s, 2s, 4s, 8s, 16s
-  const delay = Math.pow(2, reconnectAttempts - 1) * 1000
-  reconnectTimer = setTimeout(connect, delay)
-}
-
-function dispatch(msg: WsMessage) {
-  // pong 是心跳响应,重置计数,不分发给业务
-  if (msg.type === 'pong') {
-    missedPongs = 0
-    return
-  }
-  const set = handlers.get(msg.type)
-  if (set) {
-    set.forEach(handler => {
-      try {
-        handler(msg.data)
-      } catch (e) {
-        console.error('[WS handler error]', msg.type, e)
-      }
-    })
-  }
-}
-
-function connect() {
-  if (manualClose) return
-  if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return
-
-  status.value = 'connecting'
-  try {
-    ws = new WebSocket(getWsUrl())
-  } catch (e) {
-    console.error('[WS] connect failed', e)
-    scheduleReconnect()
-    return
-  }
-
-  ws.onopen = () => {
-    reconnectAttempts = 0
-    status.value = 'open'
-    startHeartbeat()
-  }
-
-  ws.onmessage = (event) => {
-    try {
-      const msg = JSON.parse(event.data) as WsMessage
-      dispatch(msg)
-    } catch {
-      // 非 JSON 消息忽略
-    }
-  }
-
-  ws.onerror = (e) => {
-    console.error('[WS] error', e)
-  }
-
-  ws.onclose = () => {
-    status.value = 'closed'
-    clearTimers()
-    if (!manualClose) scheduleReconnect()
-  }
-}
+import { ref, onUnmounted, readonly } from 'vue';
+import { getToken } from '@/utils/auth';
 
 /**
- * 订阅某类消息。返回取消订阅函数。
- * 传入的 handler 在组件卸载时会自动清理。
+ * WebSocket 连接 composable
+ * 封装连接/自动重连(指数退避)/心跳/消息分发。
+ * 参考源 vue-pure-admin mqtt-client.vue 的重连退避逻辑。
+ * 消息协议(JSON):{ type: 'alert'|'detection'|'pong', payload }
  */
-function on(type: string, handler: MessageHandler): () => void {
-  if (!handlers.has(type)) handlers.set(type, new Set())
-  handlers.get(type)!.add(handler)
-  activeSubscribers++
+export type WsMessageHandler = (payload: any) => void;
 
-  // 首次订阅时建连
-  if (status.value === 'closed' && !manualClose) connect()
+const MAX_RETRIES = 5;
+const BASE_DELAY = 2000;
+const MAX_DELAY = 16000;
+const HEARTBEAT_INTERVAL = 25000;
 
-  return () => off(type, handler)
-}
-
-function off(type: string, handler: MessageHandler) {
-  const set = handlers.get(type)
-  if (set) {
-    set.delete(handler)
-    if (set.size === 0) handlers.delete(type)
-  }
-  activeSubscribers = Math.max(0, activeSubscribers - 1)
-
-  // 没有订阅者了,且不在组件上下文,可考虑关闭连接(此处保留连接,由组件卸载逻辑控制)
-}
-
-/** 手动关闭连接(通常不需要手动调) */
-function close() {
-  manualClose = true
-  clearTimers()
-  if (ws) {
-    ws.onclose = null
-    ws.close()
-    ws = null
-  }
-  status.value = 'closed'
+function wsUrl(): string {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  return `${proto}//${location.host}/ws?token=${encodeURIComponent(getToken())}`;
 }
 
 export function useWebSocket() {
-  // 组件卸载时:若已无任何活跃订阅者,关闭连接释放资源
-  onUnmounted(() => {
-    activeSubscribers = Math.max(0, activeSubscribers - 1)
-    if (activeSubscribers === 0) {
-      manualClose = true
-      clearTimers()
-      if (ws) {
-        ws.onclose = null
-        ws.close()
-        ws = null
-      }
-      status.value = 'closed'
-      // 下次有订阅时允许重连
-      manualClose = false
-    }
-  })
+  const connected = ref(false);
+  const retryCount = ref(0);
 
-  return { status, on, off, close }
+  let ws: WebSocket | null = null;
+  let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+
+  const handlers = new Map<string, Set<WsMessageHandler>>();
+
+  function on(type: string, handler: WsMessageHandler) {
+    if (!handlers.has(type)) handlers.set(type, new Set());
+    handlers.get(type)!.add(handler);
+    return () => handlers.get(type)?.delete(handler);
+  }
+
+  function dispatch(msg: any) {
+    if (!msg || !msg.type) return;
+    const set = handlers.get(msg.type);
+    if (set) set.forEach((h) => h(msg.payload));
+  }
+
+  function startHeartbeat() {
+    stopHeartbeat();
+    heartbeatTimer = setInterval(() => {
+      if (ws && ws.readyState === WebSocket.OPEN) ws.send('ping');
+    }, HEARTBEAT_INTERVAL);
+  }
+
+  function stopHeartbeat() {
+    if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
+  }
+
+  function clearReconnectTimer() {
+    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+  }
+
+  function scheduleReconnect() {
+    if (retryCount.value >= MAX_RETRIES) {
+      console.warn('[WS] 重连次数已达上限,停止重连');
+      return;
+    }
+    clearReconnectTimer();
+    const delay = Math.min(BASE_DELAY * Math.pow(2, retryCount.value), MAX_DELAY);
+    retryCount.value += 1;
+    console.log(`[WS] ${delay}ms 后第 ${retryCount.value} 次重连`);
+    reconnectTimer = setTimeout(connect, delay);
+  }
+
+  function connect() {
+    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+    try {
+      ws = new WebSocket(wsUrl());
+    } catch (e) {
+      console.error('[WS] 创建连接失败', e);
+      scheduleReconnect();
+      return;
+    }
+    ws.onopen = () => {
+      console.log('[WS] 已连接');
+      connected.value = true;
+      retryCount.value = 0;
+      startHeartbeat();
+    };
+    ws.onmessage = (event) => {
+      try { dispatch(JSON.parse(event.data)); } catch { /* 非 JSON 忽略 */ }
+    };
+    ws.onclose = (event) => {
+      console.log('[WS] 连接关闭', event.code);
+      connected.value = false;
+      stopHeartbeat();
+      if (event.code !== 1000 && event.code !== 1008) scheduleReconnect();
+    };
+    ws.onerror = (e) => console.error('[WS] 错误', e);
+  }
+
+  function disconnect() {
+    clearReconnectTimer();
+    stopHeartbeat();
+    retryCount.value = MAX_RETRIES;
+    if (ws) { ws.onclose = null; ws.close(1000, 'client disconnect'); ws = null; }
+    connected.value = false;
+  }
+
+  onUnmounted(disconnect);
+
+  return { connected: readonly(connected), retryCount: readonly(retryCount), connect, disconnect, on };
+}
+
+// 全局单例:整个应用共享一个 WS 连接
+let _singleton: ReturnType<typeof useWebSocket> | null = null;
+export function useSharedWebSocket() {
+  if (!_singleton) {
+    _singleton = useWebSocket();
+    _singleton.connect();
+  }
+  return _singleton;
 }

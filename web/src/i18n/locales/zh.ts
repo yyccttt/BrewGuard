@@ -1,4 +1,25 @@
 export default {
+  common: {
+    commandPalette: {
+      placeholder: '搜索菜单或批次号...',
+      empty: '无匹配结果',
+      navigate: '导航',
+      select: '选择',
+      close: '关闭',
+      typeMenu: '菜单',
+      typeBatch: '批次',
+      batchDesc: '跳转到批次详情',
+    },
+    notification: {
+      title: '通知中心',
+      empty: '暂无通知',
+      markAllRead: '全部已读',
+      viewAll: '查看全部告警',
+      severe: '严重',
+      warning: '警告',
+      info: '信息',
+    },
+  },
   hero: {
     badge: '全新',
     platform: '智能发酵监测平台',
@@ -177,6 +198,8 @@ export default {
         trendSubtitle: '近 24 小时温度、pH 与酒精度变化',
         distTitle: '批次状态分布',
         distSubtitle: '当前各状态批次数量',
+        tempGauge: '实时温度仪表',
+        tempGaugeSub: '当前所有批次平均发酵温度',
         tempLabel: '温度',
         phLabel: 'pH',
         abvLabel: '酒精度',
