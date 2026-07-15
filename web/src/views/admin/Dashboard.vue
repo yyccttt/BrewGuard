@@ -96,6 +96,7 @@ import Skeleton from 'primevue/skeleton';
 import AnimatedContent from '@/content/Animations/AnimatedContent/AnimatedContent.vue';
 import CountUp from '@/content/TextAnimations/CountUp/CountUp.vue';
 import { get } from '@/utils/http';
+import { useWebSocket } from '@/composables/useWebSocket';
 import './Dashboard.css';
 
 ChartJS.register(
@@ -272,6 +273,7 @@ async function loadStats() {
   }
 }
 
+// 趋势折线图数据加载(重绘成本高,保持轮询节奏刷新)
 async function loadTrends() {
   trendLoading.value = true;
   try {
@@ -292,14 +294,21 @@ async function refreshAll() {
   await Promise.all([loadStats(), loadTrends()]);
 }
 
+// WebSocket: 收到新检测记录时刷新统计(实时跳数,无需等轮询)
+const { on } = useWebSocket();
+
 let timer: ReturnType<typeof setInterval> | null = null;
 
 onMounted(() => {
   statsLoading.value = true;
   trendLoading.value = true;
   refreshAll();
-  // 30 秒自动轮询刷新
+  // 30 秒自动轮询刷新(统计 + 趋势图)
   timer = setInterval(refreshAll, REFRESH_MS);
+  // WebSocket 实时推送:新检测数据到达时立即刷新概览统计(秒级跳数)
+  on('detection', () => {
+    loadStats();
+  });
 });
 
 onUnmounted(() => {

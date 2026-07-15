@@ -46,10 +46,12 @@ import Button from 'primevue/button';
 import Select from 'primevue/select';
 import Tag from 'primevue/tag';
 import { get, post } from '@/utils/http';
+import { useWebSocket } from '@/composables/useWebSocket';
 import './Alerts.css';
 
 const { t } = useI18n();
 const toast = useToast();
+const { on } = useWebSocket();
 
 interface AlertItem {
   id: number;
@@ -116,5 +118,23 @@ async function doResolve(data: AlertItem) {
   }
 }
 
-onMounted(loadList);
+// WebSocket: 收到新告警实时追加 + Toast 弹出
+onMounted(() => {
+  loadList();
+  on('alert', (alertData: AlertItem) => {
+    // Toast 瞬时提醒
+    const metricLabel = t(`admin.alerts.metrics.${alertData.metric}`);
+    const dirLabel = t(`admin.alerts.directions.${alertData.direction}`);
+    toast.add({
+      severity: 'warn',
+      summary: t('admin.alerts.title'),
+      detail: `${metricLabel} ${dirLabel} (${alertData.value})`,
+      life: 6000
+    });
+    // 列表追加:当前筛选为"全部"或匹配告警状态时才追加,避免破坏筛选结果
+    if (!statusFilter.value || statusFilter.value === alertData.status) {
+      alerts.value.unshift(alertData);
+    }
+  });
+});
 </script>
