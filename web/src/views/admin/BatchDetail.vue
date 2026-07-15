@@ -8,7 +8,10 @@
     <div class="detail-batch-card" v-if="batch">
       <div class="detail-batch-header">
         <h2 class="detail-batch-title">{{ batch.batch_no }}</h2>
-        <Button :label="t('admin.batch.exportReport')" icon="pi pi-file-pdf" severity="help" size="small" :loading="exporting" @click="exportReport" />
+        <div class="detail-batch-actions">
+          <Button v-if="batch.status === 'fermenting'" :label="t('admin.batch.finishFerment')" icon="pi pi-flag" severity="success" size="small" :loading="finishing" @click="finishFerment" />
+          <Button :label="t('admin.batch.exportReport')" icon="pi pi-file-pdf" severity="help" size="small" :loading="exporting" @click="exportReport" />
+        </div>
       </div>
       <div class="detail-batch-meta">
         <span class="detail-meta-item"><i class="pi pi-tag" /> {{ batch.recipe || '-' }}</span>
@@ -18,11 +21,23 @@
       <p class="detail-batch-remark" v-if="batch.remark">{{ batch.remark }}</p>
     </div>
 
+    <!-- 检测趋势图(温度 / pH / 酒精度) -->
+    <div class="detail-trend-card" v-if="crud.list.value.length > 0">
+      <div class="detail-trend-header">
+        <h3 class="detail-section-title">{{ t('admin.batch.trend') }}</h3>
+      </div>
+      <EChart :option="trendOption" height="300px" />
+    </div>
+
     <!-- 检测记录列表 -->
     <div class="detail-section">
       <div class="detail-toolbar">
         <h3 class="detail-section-title">{{ t('admin.detection.title') }}</h3>
-        <Button :label="t('admin.detection.add')" icon="pi pi-plus" @click="crud.openCreate()" v-permission="'detection:create'" />
+        <div class="detail-toolbar-actions">
+          <Button :label="t('common.export')" icon="pi pi-file-excel" severity="success" size="small" :loading="exportingRecords" @click="exportRecords" />
+          <Button :label="t('admin.batch.importDetections')" icon="pi pi-upload" severity="secondary" size="small" @click="importVisible = true" />
+          <Button :label="t('admin.detection.add')" icon="pi pi-plus" @click="crud.openCreate()" v-permission="'detection:create'" />
+        </div>
       </div>
 
       <DataTable
@@ -81,11 +96,38 @@
     </Dialog>
 
     <ConfirmDialog />
+
+    <!-- 批量导入 Dialog (#42) -->
+    <Dialog v-model:visible="importVisible" :header="t('admin.batch.importDetections')" modal class="detail-dialog">
+      <div class="detail-import">
+        <p class="detail-import-hint">{{ t('admin.batch.importHint') }}</p>
+        <FileUpload
+          mode="basic"
+          accept=".csv,.xlsx"
+          :maxFileSize="5000000"
+          :label="t('admin.batch.chooseFile')"
+          :chooseLabel="t('admin.batch.chooseFile')"
+          @select="onImportFile"
+          :auto="true"
+          customUpload
+        />
+        <div v-if="importResult" class="detail-import-result">
+          <p>{{ importResult.msg }}</p>
+          <div v-if="importResult.data?.errors?.length" class="detail-import-errors">
+            <div v-for="(err, i) in importResult.data.errors" :key="i">{{ err }}</div>
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <Button :label="t('admin.batch.downloadTemplate')" icon="pi pi-download" severity="secondary" text @click="downloadTpl" />
+        <Button label="OK" icon="pi pi-check" @click="importVisible = false" />
+      </template>
+    </Dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useConfirm } from 'primevue/useconfirm';
@@ -97,7 +139,10 @@ import InputText from 'primevue/inputtext';
 import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import ConfirmDialog from 'primevue/confirmdialog';
-import { get } from '@/utils/http';
+import FileUpload from 'primevue/fileupload';
+import EChart from '@/components/common/EChart.vue';
+import { get, post } from '@/utils/http';
+import { downloadFile } from '@/utils/download';
 import { useCrud } from '@/composables/useCrud';
 import { exportBatchReport } from '@/utils/pdfReport';
 import './BatchDetail.css';
@@ -126,6 +171,7 @@ interface Detection {
   ph: number | null;
   abv: number | null;
   remark: string;
+  created_at?: string;
 }
 
 const batch = ref<Batch | null>(null);
@@ -142,6 +188,31 @@ const crud = useCrud<Detection>({
     saveSuccess: t('admin.detection.saveSuccess'),
     deleteSuccess: t('admin.detection.deleteSuccess'),
   },
+});
+
+// 趋势图:温度(左轴)/ 酒精度(左轴)/ pH(右轴),双 Y 轴 + dataZoom
+const trendOption = computed(() => {
+  const records = crud.list.value;
+  const labels = records.map((r) => (r.created_at ? String(r.created_at).replace('T', ' ').slice(11, 16) : ''));
+  return {
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'axis', backgroundColor: 'rgba(15,15,15,0.95)', borderColor: 'rgba(255,255,255,0.1)', textStyle: { color: '#fff' } },
+    legend: {
+      data: [t('admin.detection.temperature'), t('admin.detection.ph'), t('admin.detection.abv')],
+      textStyle: { color: 'rgba(255,255,255,0.7)' }, top: 0,
+    },
+    grid: { left: 50, right: 50, top: 40, bottom: 50 },
+    xAxis: { type: 'category', data: labels, axisLabel: { color: 'rgba(255,255,255,0.4)' }, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } } },
+    yAxis: [
+      { type: 'value', name: '温度/酒精度', axisLabel: { color: 'rgba(255,255,255,0.4)' }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.04)' } } },
+      { type: 'value', name: 'pH', axisLabel: { color: 'rgba(91,157,255,0.6)' }, splitLine: { show: false } },
+    ],
+    series: [
+      { name: t('admin.detection.temperature'), type: 'line', smooth: true, data: records.map((r) => r.temperature), connectNulls: true, itemStyle: { color: '#7cff67' }, areaStyle: { color: 'rgba(124,255,103,0.1)' } },
+      { name: t('admin.detection.ph'), type: 'line', smooth: true, yAxisIndex: 1, data: records.map((r) => r.ph), connectNulls: true, itemStyle: { color: '#5b9dff' } },
+      { name: t('admin.detection.abv'), type: 'line', smooth: true, data: records.map((r) => r.abv), connectNulls: true, itemStyle: { color: '#ffb347' } },
+    ],
+  };
 });
 
 function batchSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {
@@ -206,6 +277,70 @@ async function exportReport() {
     toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
   } finally {
     exporting.value = false;
+  }
+}
+
+// #43 结束发酵:状态流转为 completed + 填充 end_time
+const finishing = ref(false);
+async function finishFerment() {
+  if (!batch.value) return;
+  confirm.require({
+    message: t('admin.batch.finishConfirm'),
+    header: t('admin.batch.finishFerment'),
+    icon: 'pi pi-flag',
+    accept: async () => {
+      finishing.value = true;
+      try {
+        await post('/batch/finish', {}, { params: { id: batchId } });
+        toast.add({ severity: 'success', summary: 'OK', detail: t('admin.batch.finished'), life: 3000 });
+        await loadBatch();
+      } catch (e) {
+        toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
+      } finally {
+        finishing.value = false;
+      }
+    },
+  });
+}
+
+// #40 导出该批次检测记录 Excel
+const exportingRecords = ref(false);
+async function exportRecords() {
+  exportingRecords.value = true;
+  try {
+    await downloadFile('/detection/export', { batch_id: batchId });
+    toast.add({ severity: 'success', summary: 'OK', detail: t('common.exportDone'), life: 3000 });
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
+  } finally {
+    exportingRecords.value = false;
+  }
+}
+
+// #42 批量导入检测记录
+const importVisible = ref(false);
+const importResult = ref<any>(null);
+async function onImportFile(event: any) {
+  const file = event.files?.[0];
+  if (!file) return;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('batch_id', String(batchId));
+  try {
+    const res = await post<any>('/detection/import', formData);
+    importResult.value = res;
+    toast.add({ severity: 'success', summary: 'OK', detail: res.msg, life: 4000 });
+    crud.refresh();
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
+  }
+}
+
+async function downloadTpl() {
+  try {
+    await downloadFile('/detection/template');
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
   }
 }
 

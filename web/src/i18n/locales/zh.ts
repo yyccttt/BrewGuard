@@ -1,5 +1,7 @@
 export default {
   common: {
+    export: '导出',
+    exportDone: '导出成功',
     commandPalette: {
       placeholder: '搜索菜单或批次号...',
       empty: '无匹配结果',
@@ -213,6 +215,10 @@ export default {
       comingSoon: '系统设置即将上线。',
       tabUsers: '用户管理',
       tabAuditLog: '审计日志',
+      tabRoles: '角色管理',
+      tabMenus: '菜单管理',
+      tabDepts: '部门管理',
+      tabApis: 'API 权限',
       users: {
         add: '新建用户',
         edit: '编辑用户',
@@ -252,6 +258,29 @@ export default {
         empty: '暂无日志',
         requestArgs: '请求参数',
         responseBody: '响应数据'
+      },
+      roles: {
+        add: '新建角色', edit: '编辑', delete: '删除', search: '搜索角色名...',
+        name: '角色名', desc: '描述', users: '用户数', actions: '操作',
+        confirmDelete: '确定删除该角色吗?', saveSuccess: '角色保存成功', deleteSuccess: '删除成功',
+        empty: '暂无角色', assignPerm: '分配权限', permHint: '勾选菜单与 API 分配给该角色',
+        menus: '菜单权限', apis: 'API 权限', permSaved: '权限已保存'
+      },
+      menus: {
+        add: '新建菜单', edit: '编辑', delete: '删除', addChild: '添加子菜单',
+        name: '菜单名称', type: '类型', path: '路径', icon: '图标', component: '组件',
+        order: '排序', actions: '操作', confirmDelete: '确定删除该菜单吗?',
+        saveSuccess: '保存成功', deleteSuccess: '删除成功', empty: '暂无菜单', title: '菜单管理'
+      },
+      depts: {
+        add: '新建部门', edit: '编辑', delete: '删除', addChild: '添加子部门',
+        name: '部门名称', desc: '备注', order: '排序', actions: '操作',
+        confirmDelete: '确定删除该部门吗?', saveSuccess: '保存成功', deleteSuccess: '删除成功',
+        empty: '暂无部门', title: '部门管理'
+      },
+      apis: {
+        method: '方法', path: '路径', summary: '简介', tags: '标签',
+        refresh: '重新扫描', refreshDone: 'API 已重新扫描', search: '搜索路径...', empty: '暂无 API'
       }
     },
     alerts: {
@@ -320,7 +349,14 @@ export default {
       basicInfo: '批次基本信息',
       detectionRecords: '检测记录',
       trend: '趋势图(温度 / pH / 酒精度)',
-      generatedAt: '生成时间'
+      generatedAt: '生成时间',
+      finishFerment: '结束发酵',
+      finishConfirm: '确定结束该批次发酵吗?状态将变为已完成,并自动记录结束时间。',
+      finished: '批次已结束发酵',
+      importDetections: '批量导入',
+      importHint: '上传 .csv 或 .xlsx 文件,列名需为:temperature、ph、abv、remark。可先下载模板。',
+      chooseFile: '选择文件',
+      downloadTemplate: '下载模板'
     },
     detection: {
       title: '检测记录',
