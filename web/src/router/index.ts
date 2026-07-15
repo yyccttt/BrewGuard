@@ -16,6 +16,12 @@ const router = createRouter({
       component: () => import('@/views/Login.vue')
     },
     {
+      path: '/screen',
+      name: 'screen',
+      // 车间投屏大屏(独立全屏布局,不套 AdminLayout)
+      component: () => import('@/views/screen/Screen.vue')
+    },
+    {
       path: '/admin',
       component: () => import('@/layouts/AdminLayout.vue'),
       meta: { requiresAuth: true },
@@ -60,6 +66,21 @@ const router = createRouter({
           component: () => import('@/views/admin/System.vue')
         }
       ]
+    },
+    {
+      path: '/403',
+      name: 'forbidden',
+      component: () => import('@/views/error/Forbidden.vue')
+    },
+    {
+      path: '/500',
+      name: 'server-error',
+      component: () => import('@/views/error/ServerError.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/error/NotFound.vue')
     }
   ]
 });

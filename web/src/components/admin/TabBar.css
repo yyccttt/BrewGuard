@@ -1,0 +1,100 @@
+.tabbar {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.4rem 0.5rem;
+}
+
+.tabbar-scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  padding-bottom: 0.2rem;
+}
+
+.tabbar-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.tabbar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+.tabbar-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.tabbar-item:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.tabbar-item.is-active {
+  color: var(--color-primary, #7cff67);
+  background: rgba(124, 255, 103, 0.1);
+  border-color: rgba(124, 255, 103, 0.3);
+}
+
+.tabbar-item-icon {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.tabbar-item-close {
+  font-size: 0.65rem;
+  padding: 1px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.tabbar-item:hover .tabbar-item-close,
+.tabbar-item.is-active .tabbar-item-close {
+  opacity: 0.7;
+}
+
+.tabbar-item-close:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* 右键菜单 */
+.tabbar-ctxmenu {
+  position: fixed;
+  z-index: 2000;
+  min-width: 130px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.3rem 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.tabbar-ctxmenu-item {
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.tabbar-ctxmenu-item:hover {
+  background: rgba(124, 255, 103, 0.12);
+  color: var(--color-primary, #7cff67);
+}

@@ -19,8 +19,17 @@
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
-  margin: 0 0 0.75rem;
+  margin: 0;
   color: #fff;
+}
+
+.detail-batch-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .detail-batch-meta {

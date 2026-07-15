@@ -2,7 +2,10 @@
   <div class="alert-page">
     <div class="alert-toolbar">
       <h1 class="alert-title">{{ t('admin.alerts.title') }}</h1>
-      <Select v-model="statusFilter" :options="statusOptions" optionLabel="label" optionValue="value" @change="loadList" class="alert-filter" />
+      <div class="alert-toolbar-actions">
+        <Select v-model="statusFilter" :options="statusOptions" optionLabel="label" optionValue="value" @change="loadList" class="alert-filter" />
+        <Button :label="t('common.export')" icon="pi pi-file-excel" severity="success" size="small" :loading="exporting" @click="doExport" />
+      </div>
     </div>
 
     <DataTable :value="alerts" :loading="loading" class="alert-table">
@@ -37,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import DataTable from 'primevue/datatable';
@@ -46,12 +49,12 @@ import Button from 'primevue/button';
 import Select from 'primevue/select';
 import Tag from 'primevue/tag';
 import { get, post } from '@/utils/http';
-import { useWebSocket } from '@/composables/useWebSocket';
+import { downloadFile } from '@/utils/download';
+import { useSharedWebSocket } from '@/composables/useWebSocket';
 import './Alerts.css';
 
 const { t } = useI18n();
 const toast = useToast();
-const { on } = useWebSocket();
 
 interface AlertItem {
   id: number;
@@ -98,6 +101,20 @@ async function loadList() {
   }
 }
 
+// Excel 导出(带当前状态筛选)
+const exporting = ref(false);
+async function doExport() {
+  exporting.value = true;
+  try {
+    await downloadFile('/alert/export', statusFilter.value ? { status: statusFilter.value } : undefined);
+    toast.add({ severity: 'success', summary: 'OK', detail: t('common.exportDone'), life: 3000 });
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
+  } finally {
+    exporting.value = false;
+  }
+}
+
 async function doAcknowledge(data: AlertItem) {
   try {
     await post('/alert/acknowledge', { id: data.id, status: 'acknowledged' });
@@ -118,23 +135,30 @@ async function doResolve(data: AlertItem) {
   }
 }
 
-// WebSocket: 收到新告警实时追加 + Toast 弹出
+// WebSocket:收到新告警时 Toast 弹出 + 列表头部追加
+const ws = useSharedWebSocket();
+let offAlert: (() => void) | null = null;
+
 onMounted(() => {
   loadList();
-  on('alert', (alertData: AlertItem) => {
-    // Toast 瞬时提醒
-    const metricLabel = t(`admin.alerts.metrics.${alertData.metric}`);
-    const dirLabel = t(`admin.alerts.directions.${alertData.direction}`);
+  offAlert = ws.on('alert', (payload) => {
+    const metricText = t(`admin.alerts.metrics.${payload.metric}`);
+    const dirText = t(`admin.alerts.directions.${payload.direction}`);
     toast.add({
-      severity: 'warn',
+      severity: payload.direction === 'high' ? 'error' : 'warn',
       summary: t('admin.alerts.title'),
-      detail: `${metricLabel} ${dirLabel} (${alertData.value})`,
-      life: 6000
+      detail: `${payload.batch_no || ('#' + payload.batch_id)} ${metricText} ${payload.value} (${dirText})`,
+      life: 5000,
     });
-    // 列表追加:当前筛选为"全部"或匹配告警状态时才追加,避免破坏筛选结果
-    if (!statusFilter.value || statusFilter.value === alertData.status) {
-      alerts.value.unshift(alertData);
+    if (!statusFilter.value || statusFilter.value === 'open') {
+      alerts.value.unshift({
+        id: payload.id, batch_id: payload.batch_id, metric: payload.metric,
+        value: payload.value, threshold: payload.threshold, direction: payload.direction,
+        status: payload.status, created_at: payload.created_at || new Date().toISOString(),
+      });
     }
   });
 });
+
+onUnmounted(() => { if (offAlert) offAlert(); });
 </script>

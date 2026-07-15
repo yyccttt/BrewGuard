@@ -1,4 +1,27 @@
 export default {
+  common: {
+    export: '导出',
+    exportDone: '导出成功',
+    commandPalette: {
+      placeholder: '搜索菜单或批次号...',
+      empty: '无匹配结果',
+      navigate: '导航',
+      select: '选择',
+      close: '关闭',
+      typeMenu: '菜单',
+      typeBatch: '批次',
+      batchDesc: '跳转到批次详情',
+    },
+    notification: {
+      title: '通知中心',
+      empty: '暂无通知',
+      markAllRead: '全部已读',
+      viewAll: '查看全部告警',
+      severe: '严重',
+      warning: '警告',
+      info: '信息',
+    },
+  },
   hero: {
     badge: '全新',
     platform: '智能发酵监测平台',
@@ -118,6 +141,22 @@ export default {
   langToggle: {
     switchTo: 'EN'
   },
+  error: {
+    403: {
+      title: '无权访问',
+      desc: '抱歉,你没有访问该页面的权限。请联系管理员授予相应角色或权限。'
+    },
+    404: {
+      title: '页面走丢了',
+      desc: '你要找的页面不存在,可能已被移除或地址输入有误。'
+    },
+    500: {
+      title: '服务器开小差了',
+      desc: '服务器内部错误,请稍后重试。如问题持续,请联系管理员。'
+    },
+    backHome: '返回首页',
+    goBack: '返回上一页'
+  },
   ai: {
     title: 'BrewGuard 助手',
     welcome: '你好!我是 BrewGuard AI 助手,可以回答关于发酵检测、批次管理、酿造指标等问题。',
@@ -135,6 +174,18 @@ export default {
   admin: {
     brand: 'BrewGuard 管理后台',
     backHome: '首页',
+    theme: {
+      light: '亮色模式',
+      dark: '暗色模式',
+      auto: '跟随系统'
+    },
+    tab: {
+      closeCurrent: '关闭当前',
+      closeLeft: '关闭左侧',
+      closeRight: '关闭右侧',
+      closeOthers: '关闭其他',
+      closeAll: '关闭全部'
+    },
     menu: {
       dashboard: '仪表盘',
       batch: '发酵批次',
@@ -146,6 +197,8 @@ export default {
     dashboard: {
       title: '仪表盘',
       overview: '概览',
+      live: '实时',
+      noTrendData: '暂无检测数据,趋势图将在有检测记录后显示',
       cards: {
         batchTotal: '批次总数',
         batchAbnormal: '异常批次',
@@ -159,6 +212,8 @@ export default {
         trendSubtitle: '近 24 小时温度、pH 与酒精度变化',
         distTitle: '批次状态分布',
         distSubtitle: '当前各状态批次数量',
+        tempGauge: '实时温度仪表',
+        tempGaugeSub: '当前所有批次平均发酵温度',
         tempLabel: '温度',
         phLabel: 'pH',
         abvLabel: '酒精度',
@@ -169,7 +224,76 @@ export default {
     },
     system: {
       title: '系统管理',
-      comingSoon: '系统设置即将上线。'
+      comingSoon: '系统设置即将上线。',
+      tabUsers: '用户管理',
+      tabAuditLog: '审计日志',
+      tabRoles: '角色管理',
+      tabMenus: '菜单管理',
+      tabDepts: '部门管理',
+      tabApis: 'API 权限',
+      users: {
+        add: '新建用户',
+        edit: '编辑用户',
+        delete: '删除',
+        search: '搜索用户名...',
+        username: '用户名',
+        email: '邮箱',
+        status: '状态',
+        active: '启用',
+        inactive: '禁用',
+        superuser: '超管',
+        roles: '角色',
+        actions: '操作',
+        password: '密码',
+        resetPassword: '重置密码',
+        resetPasswordConfirm: '确定将该用户密码重置为 123456 吗?',
+        resetPasswordDone: '密码已重置为 123456',
+        confirmDelete: '确定删除该用户吗?',
+        saveSuccess: '用户保存成功',
+        deleteSuccess: '用户删除成功',
+        empty: '暂无用户',
+        toggleActive: '启用/禁用'
+      },
+      auditLog: {
+        title: '审计日志',
+        username: '用户',
+        module: '模块',
+        method: '方法',
+        path: '路径',
+        summary: '描述',
+        status: '状态码',
+        time: '时间',
+        actions: '操作',
+        filter: '筛选',
+        reset: '重置',
+        detail: '详情',
+        empty: '暂无日志',
+        requestArgs: '请求参数',
+        responseBody: '响应数据'
+      },
+      roles: {
+        add: '新建角色', edit: '编辑', delete: '删除', search: '搜索角色名...',
+        name: '角色名', desc: '描述', users: '用户数', actions: '操作',
+        confirmDelete: '确定删除该角色吗?', saveSuccess: '角色保存成功', deleteSuccess: '删除成功',
+        empty: '暂无角色', assignPerm: '分配权限', permHint: '勾选菜单与 API 分配给该角色',
+        menus: '菜单权限', apis: 'API 权限', permSaved: '权限已保存'
+      },
+      menus: {
+        add: '新建菜单', edit: '编辑', delete: '删除', addChild: '添加子菜单',
+        name: '菜单名称', type: '类型', path: '路径', icon: '图标', component: '组件',
+        order: '排序', actions: '操作', confirmDelete: '确定删除该菜单吗?',
+        saveSuccess: '保存成功', deleteSuccess: '删除成功', empty: '暂无菜单', title: '菜单管理'
+      },
+      depts: {
+        add: '新建部门', edit: '编辑', delete: '删除', addChild: '添加子部门',
+        name: '部门名称', desc: '备注', order: '排序', actions: '操作',
+        confirmDelete: '确定删除该部门吗?', saveSuccess: '保存成功', deleteSuccess: '删除成功',
+        empty: '暂无部门', title: '部门管理'
+      },
+      apis: {
+        method: '方法', path: '路径', summary: '简介', tags: '标签',
+        refresh: '重新扫描', refreshDone: 'API 已重新扫描', search: '搜索路径...', empty: '暂无 API'
+      }
     },
     alerts: {
       title: '告警中心',
@@ -221,7 +345,30 @@ export default {
       deleteSuccess: '批次删除成功',
       empty: '暂无批次,点击新建第一个批次。',
       detail: '查看详情',
-      back: '返回批次列表'
+      back: '返回批次列表',
+      thresholdConfig: '告警阈值配置',
+      thresholdHint: '配置后,该批次的检测记录将按此阈值自动告警;留空则使用系统默认值(温度 18~28、pH 3.5~4.5、酒精度 0~15)。',
+      tempRange: '温度范围 (°C)',
+      phRange: 'pH 范围',
+      abvRange: '酒精度范围 (%)',
+      min: '下限',
+      max: '上限',
+      thresholdInvalid: '下限必须小于上限',
+      thresholdSaved: '阈值已保存',
+      exportReport: '导出报告',
+      exportDone: '报告已导出',
+      reportTitle: '批次质检报告',
+      basicInfo: '批次基本信息',
+      detectionRecords: '检测记录',
+      trend: '趋势图(温度 / pH / 酒精度)',
+      generatedAt: '生成时间',
+      finishFerment: '结束发酵',
+      finishConfirm: '确定结束该批次发酵吗?状态将变为已完成,并自动记录结束时间。',
+      finished: '批次已结束发酵',
+      importDetections: '批量导入',
+      importHint: '上传 .csv 或 .xlsx 文件,列名需为:temperature、ph、abv、remark。可先下载模板。',
+      chooseFile: '选择文件',
+      downloadTemplate: '下载模板'
     },
     detection: {
       title: '检测记录',

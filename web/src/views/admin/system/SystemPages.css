@@ -1,0 +1,151 @@
+.sys-users,
+.sys-audit {
+  max-width: 1200px;
+}
+
+.sys-toolbar,
+.sys-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.sys-toolbar {
+  justify-content: space-between;
+}
+
+.sys-search {
+  min-width: 220px;
+  flex: 1;
+  max-width: 320px;
+}
+
+.sys-filter-input {
+  min-width: 140px;
+}
+
+.sys-filter-input-sm {
+  width: 90px;
+}
+
+.sys-table {
+  background: #0f0f0f;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sys-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.9rem;
+}
+
+/* 表单 */
+.sys-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 380px;
+  padding-top: 0.5rem;
+}
+
+.sys-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sys-form-row label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Geist', sans-serif;
+}
+
+.sys-form-inline {
+  flex-direction: row;
+  gap: 2rem;
+}
+
+.sys-form-inline-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sys-form-inline-item label {
+  margin: 0;
+}
+
+.sys-dialog {
+  min-width: 440px;
+}
+
+/* 详情 Dialog */
+.sys-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 520px;
+  padding-top: 0.5rem;
+}
+
+.sys-detail-row {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sys-detail-key {
+  flex: 0 0 90px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.82rem;
+}
+
+.sys-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.sys-detail-pre {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.8rem;
+  font-size: 0.78rem;
+  font-family: 'Geist Mono', monospace;
+  color: rgba(255, 255, 255, 0.75);
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+}
+
+.sys-detail-dialog {
+  min-width: 580px;
+}
+
+@media (max-width: 640px) {
+  .sys-form,
+  .sys-detail {
+    min-width: unset;
+  }
+  .sys-dialog,
+  .sys-detail-dialog {
+    min-width: unset;
+  }
+  .sys-search {
+    min-width: 140px;
+    max-width: unset;
+  }
+  .sys-form-inline {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+}

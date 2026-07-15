@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from tortoise import Tortoise
 
-from app.api.ws import router as ws_router
 from app.core.exceptions import SettingNotFound
 from app.core.init_app import (
     init_data,
@@ -36,7 +35,9 @@ def create_app() -> FastAPI:
     )
     register_exceptions(app)
     register_routers(app, prefix="/api")
-    # WebSocket 走根级 /ws,不挂 /api/v1 前缀
+    # WebSocket 路由挂在根路径(不走 /api,避免中间件干扰)
+    from app.api.v1.ws import ws_router
+
     app.include_router(ws_router)
     return app
 

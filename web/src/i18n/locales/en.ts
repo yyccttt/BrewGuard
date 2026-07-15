@@ -1,4 +1,27 @@
 export default {
+  common: {
+    export: 'Export',
+    exportDone: 'Exported',
+    commandPalette: {
+      placeholder: 'Search menu or batch no...',
+      empty: 'No results',
+      navigate: 'Navigate',
+      select: 'Select',
+      close: 'Close',
+      typeMenu: 'Menu',
+      typeBatch: 'Batch',
+      batchDesc: 'Go to batch detail',
+    },
+    notification: {
+      title: 'Notifications',
+      empty: 'No notifications',
+      markAllRead: 'Mark all read',
+      viewAll: 'View all alerts',
+      severe: 'Severe',
+      warning: 'Warning',
+      info: 'Info',
+    },
+  },
   hero: {
     badge: 'New',
     platform: 'Intelligent Fermentation Monitoring',
@@ -118,6 +141,22 @@ export default {
   langToggle: {
     switchTo: '中文'
   },
+  error: {
+    403: {
+      title: 'Access Denied',
+      desc: 'You do not have permission to view this page. Please contact an administrator for the required role or permissions.'
+    },
+    404: {
+      title: 'Page Not Found',
+      desc: 'The page you are looking for does not exist. It may have been moved or the address mistyped.'
+    },
+    500: {
+      title: 'Server Error',
+      desc: 'Something went wrong on our end. Please try again later, or contact an administrator if it persists.'
+    },
+    backHome: 'Back Home',
+    goBack: 'Go Back'
+  },
   ai: {
     title: 'BrewGuard Assistant',
     welcome: 'Hi! I am the BrewGuard AI assistant. Ask me anything about fermentation detection, batch management, or brewing metrics.',
@@ -135,6 +174,18 @@ export default {
   admin: {
     brand: 'BrewGuard Admin',
     backHome: 'Home',
+    theme: {
+      light: 'Light',
+      dark: 'Dark',
+      auto: 'Auto'
+    },
+    tab: {
+      closeCurrent: 'Close',
+      closeLeft: 'Close Left',
+      closeRight: 'Close Right',
+      closeOthers: 'Close Others',
+      closeAll: 'Close All'
+    },
     menu: {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',
@@ -146,6 +197,8 @@ export default {
     dashboard: {
       title: 'Dashboard',
       overview: 'Overview',
+      live: 'LIVE',
+      noTrendData: 'No detection data yet. The trend chart will appear once records exist.',
       cards: {
         batchTotal: 'Total Batches',
         batchAbnormal: 'Abnormal Batches',
@@ -159,6 +212,8 @@ export default {
         trendSubtitle: 'Temperature, pH and ABV over the last 24 hours',
         distTitle: 'Batch Status Distribution',
         distSubtitle: 'Current batches by status',
+        tempGauge: 'Realtime Temperature',
+        tempGaugeSub: 'Average fermentation temperature across batches',
         tempLabel: 'Temperature',
         phLabel: 'pH',
         abvLabel: 'ABV',
@@ -169,7 +224,76 @@ export default {
     },
     system: {
       title: 'System',
-      comingSoon: 'System settings coming soon.'
+      comingSoon: 'System settings coming soon.',
+      tabUsers: 'Users',
+      tabAuditLog: 'Audit Log',
+      tabRoles: 'Roles',
+      tabMenus: 'Menus',
+      tabDepts: 'Depts',
+      tabApis: 'APIs',
+      users: {
+        add: 'New User',
+        edit: 'Edit User',
+        delete: 'Delete',
+        search: 'Search username...',
+        username: 'Username',
+        email: 'Email',
+        status: 'Status',
+        active: 'Active',
+        inactive: 'Disabled',
+        superuser: 'Superuser',
+        roles: 'Roles',
+        actions: 'Actions',
+        password: 'Password',
+        resetPassword: 'Reset Password',
+        resetPasswordConfirm: 'Reset this user\'s password to 123456?',
+        resetPasswordDone: 'Password reset to 123456',
+        confirmDelete: 'Delete this user?',
+        saveSuccess: 'User saved',
+        deleteSuccess: 'User deleted',
+        empty: 'No users',
+        toggleActive: 'Toggle Active'
+      },
+      auditLog: {
+        title: 'Audit Log',
+        username: 'User',
+        module: 'Module',
+        method: 'Method',
+        path: 'Path',
+        summary: 'Summary',
+        status: 'Status',
+        time: 'Time',
+        actions: 'Actions',
+        filter: 'Filter',
+        reset: 'Reset',
+        detail: 'Detail',
+        empty: 'No logs',
+        requestArgs: 'Request Args',
+        responseBody: 'Response Body'
+      },
+      roles: {
+        add: 'New Role', edit: 'Edit', delete: 'Delete', search: 'Search role name...',
+        name: 'Role', desc: 'Description', users: 'Users', actions: 'Actions',
+        confirmDelete: 'Delete this role?', saveSuccess: 'Role saved', deleteSuccess: 'Deleted',
+        empty: 'No roles', assignPerm: 'Assign Permissions', permHint: 'Check menus and APIs to assign to this role',
+        menus: 'Menu Permissions', apis: 'API Permissions', permSaved: 'Permissions saved'
+      },
+      menus: {
+        add: 'New Menu', edit: 'Edit', delete: 'Delete', addChild: 'Add Child',
+        name: 'Menu Name', type: 'Type', path: 'Path', icon: 'Icon', component: 'Component',
+        order: 'Order', actions: 'Actions', confirmDelete: 'Delete this menu?',
+        saveSuccess: 'Saved', deleteSuccess: 'Deleted', empty: 'No menus', title: 'Menus'
+      },
+      depts: {
+        add: 'New Dept', edit: 'Edit', delete: 'Delete', addChild: 'Add Child',
+        name: 'Department', desc: 'Remark', order: 'Order', actions: 'Actions',
+        confirmDelete: 'Delete this dept?', saveSuccess: 'Saved', deleteSuccess: 'Deleted',
+        empty: 'No departments', title: 'Departments'
+      },
+      apis: {
+        method: 'Method', path: 'Path', summary: 'Summary', tags: 'Tags',
+        refresh: 'Rescan', refreshDone: 'APIs rescanned', search: 'Search path...', empty: 'No APIs'
+      }
     },
     alerts: {
       title: 'Alert Center',
@@ -221,7 +345,30 @@ export default {
       deleteSuccess: 'Batch deleted successfully',
       empty: 'No batches yet. Create your first one.',
       detail: 'View Details',
-      back: 'Back to Batches'
+      back: 'Back to Batches',
+      thresholdConfig: 'Alert Threshold Config',
+      thresholdHint: 'When configured, detections of this batch will be alerted by these thresholds; leave blank to use system defaults (temp 18~28, pH 3.5~4.5, abv 0~15).',
+      tempRange: 'Temperature range (°C)',
+      phRange: 'pH range',
+      abvRange: 'ABV range (%)',
+      min: 'Min',
+      max: 'Max',
+      thresholdInvalid: 'Min must be less than max',
+      thresholdSaved: 'Thresholds saved',
+      exportReport: 'Export Report',
+      exportDone: 'Report exported',
+      reportTitle: 'Batch Quality Report',
+      basicInfo: 'Basic Info',
+      detectionRecords: 'Detection Records',
+      trend: 'Trend (Temperature / pH / ABV)',
+      generatedAt: 'Generated at',
+      finishFerment: 'Finish Fermentation',
+      finishConfirm: 'Finish fermentation for this batch? Status will become completed and end time will be recorded.',
+      finished: 'Fermentation finished',
+      importDetections: 'Bulk Import',
+      importHint: 'Upload a .csv or .xlsx file with columns: temperature, ph, abv, remark. Download template first if needed.',
+      chooseFile: 'Choose File',
+      downloadTemplate: 'Download Template'
     },
     detection: {
       title: 'Detection Records',
