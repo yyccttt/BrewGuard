@@ -15,6 +15,14 @@
       <p class="detail-batch-remark" v-if="batch.remark">{{ batch.remark }}</p>
     </div>
 
+    <!-- 检测数据趋势图 -->
+    <div class="detail-chart-card" v-if="records.length > 0">
+      <h3 class="detail-chart-title">{{ t('admin.detection.trendTitle') }}</h3>
+      <div class="detail-chart-body">
+        <Line :data="chartData" :options="chartOptions" />
+      </div>
+    </div>
+
     <!-- 检测记录列表 -->
     <div class="detail-section">
       <div class="detail-toolbar">
@@ -82,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useConfirm } from 'primevue/useconfirm';
@@ -94,6 +102,7 @@ import InputText from 'primevue/inputtext';
 import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import ConfirmDialog from 'primevue/confirmdialog';
+import { Line } from 'vue-chartjs';
 import { get, post, del } from '@/utils/http';
 import './BatchDetail.css';
 
@@ -134,6 +143,58 @@ const formVisible = ref(false);
 const editing = ref(false);
 const submitting = ref(false);
 const form = ref<Detection>({ batch_id: batchId, temperature: null, ph: null, abv: null, remark: '' });
+
+// ===== 趋势图数据(从 records 生成) =====
+const chartData = computed(() => {
+  const sorted = [...records.value].reverse();
+  return {
+    labels: sorted.map((r: any) => (r.created_at || '').slice(5, 16)),
+    datasets: [
+      {
+        label: t('admin.detection.temperature'),
+        data: sorted.map((r: any) => r.temperature),
+        borderColor: '#7cff67',
+        backgroundColor: 'rgba(124,255,103,0.1)',
+        tension: 0.4,
+        fill: true,
+        yAxisID: 'y'
+      },
+      {
+        label: t('admin.detection.abv'),
+        data: sorted.map((r: any) => r.abv),
+        borderColor: '#ffb347',
+        backgroundColor: 'rgba(255,179,71,0.05)',
+        tension: 0.4,
+        fill: false,
+        yAxisID: 'y'
+      },
+      {
+        label: t('admin.detection.ph'),
+        data: sorted.map((r: any) => r.ph),
+        borderColor: '#5b9dff',
+        backgroundColor: 'rgba(91,157,255,0.05)',
+        tension: 0.4,
+        fill: false,
+        yAxisID: 'y1'
+      }
+    ]
+  };
+});
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  interaction: { mode: 'index' as const, intersect: false },
+  plugins: {
+    legend: { labels: { color: 'rgba(255,255,255,0.7)', font: { size: 12 }, usePointStyle: true } },
+    tooltip: { backgroundColor: 'rgba(15,15,15,0.95)', titleColor: '#fff', bodyColor: 'rgba(255,255,255,0.8)' }
+  },
+  scales: {
+    x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 }, maxTicksLimit: 8 } },
+    y: { position: 'left' as const, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } } },
+    y1: { position: 'right' as const, grid: { display: false }, ticks: { color: 'rgba(91,157,255,0.6)', font: { size: 10 } } }
+  }
+};
 
 function batchSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {
   switch (status) {

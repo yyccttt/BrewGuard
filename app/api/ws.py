@@ -10,6 +10,7 @@
   - {"type": "alert", ...}       新告警
 """
 import json
+from typing import Optional
 
 import jwt
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
@@ -23,7 +24,7 @@ from app.settings import settings
 router = APIRouter()
 
 
-async def _authenticate(token: str) -> int | None:
+async def _authenticate(token: str) -> Optional[int]:
     """复用 JWT 鉴权逻辑,返回 user_id。失败返回 None。
 
     兼容开发后门 token=dev(取首个用户)。

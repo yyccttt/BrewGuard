@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+from typing import Optional
 
 from tortoise import fields, models
 
@@ -9,7 +10,7 @@ from app.settings import settings
 class BaseModel(models.Model):
     id = fields.BigIntField(pk=True, index=True)
 
-    async def to_dict(self, m2m: bool = False, exclude_fields: list[str] | None = None):
+    async def to_dict(self, m2m: bool = False, exclude_fields: Optional[list[str]] = None):
         if exclude_fields is None:
             exclude_fields = []
 

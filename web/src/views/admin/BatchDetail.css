@@ -51,6 +51,27 @@
   font-family: 'Figtree', sans-serif;
 }
 
+.detail-chart-card {
+  background: #0f0f0f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-chart-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  color: #fff;
+}
+
+.detail-chart-body {
+  height: 280px;
+  position: relative;
+}
+
 .detail-section {
   margin-top: 0.5rem;
 }

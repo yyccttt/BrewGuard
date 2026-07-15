@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+web/node_modules/
+.git/
+.gitignore
+db.sqlite3*
+migrations/
+app/logs/
+*.md
+.github/
