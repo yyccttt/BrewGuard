@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # ===== 后端 API + 前端静态文件 =====
+  brewguard:
+    build: .
+    container_name: brewguard-app
+    ports:
+      - "9999:9999"
+    env_file:
+      - app/.env
+    environment:
+      - DATABASE_URL=postgres://brewguard:${DB_PASSWORD:-brewguard}@db:5432/brewguard
+      - DEBUG=false
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ===== PostgreSQL 数据库(生产级) =====
+  db:
+    image: postgres:16-alpine
+    container_name: brewguard-db
+    environment:
+      POSTGRES_USER: brewguard
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-brewguard}
+      POSTGRES_DB: brewguard
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U brewguard"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pgdata:

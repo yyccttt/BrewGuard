@@ -29,9 +29,21 @@ export default defineConfig({
     port: 5173,
     open: true,
     proxy: {
+<<<<<<< HEAD
+      '/api': {
+        target: 'http://127.0.0.1:9999',
+        changeOrigin: true
+      },
+      '/ws': {
+        target: 'ws://127.0.0.1:9999',
+        ws: true,
+        changeOrigin: true
+      }
+=======
       '/api': { target: 'http://127.0.0.1:9999', changeOrigin: true },
       // WebSocket 代理(实时通信)
       '/ws': { target: 'ws://127.0.0.1:9999', ws: true, changeOrigin: true }
+>>>>>>> origin/main
     }
   },
   build: {

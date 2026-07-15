@@ -24,6 +24,6 @@ const { t } = useLocale();
 const router = useRouter();
 
 function goAdmin() {
-  router.push('/admin/dashboard');
+  router.push('/login');
 }
 </script>

@@ -128,6 +128,16 @@ export default {
   marquee: {
     items: ['实时监测', '智能预警', '批次溯源', '数据驱动酿造']
   },
+  login: {
+    subtitle: '智能酿酒检测平台',
+    username: '用户名',
+    password: '密码',
+    button: '登 录',
+    success: '登录成功',
+    failed: '登录失败',
+    hint: '默认账号:admin / 123456',
+    back: '返回首页'
+  },
   langToggle: {
     switchTo: 'EN'
   },
@@ -180,6 +190,8 @@ export default {
       dashboard: '仪表盘',
       batch: '发酵批次',
       alerts: '告警中心',
+      users: '用户管理',
+      auditlog: '审计日志',
       system: '系统管理'
     },
     dashboard: {
@@ -360,6 +372,7 @@ export default {
     },
     detection: {
       title: '检测记录',
+      trendTitle: '检测数据趋势',
       add: '新建记录',
       edit: '编辑',
       delete: '删除',

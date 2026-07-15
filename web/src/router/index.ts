@@ -11,6 +11,11 @@ const router = createRouter({
       component: LandingPage
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/Login.vue')
+    },
+    {
       path: '/screen',
       name: 'screen',
       // 车间投屏大屏(独立全屏布局,不套 AdminLayout)
@@ -46,6 +51,16 @@ const router = createRouter({
           component: () => import('@/views/admin/Alerts.vue')
         },
         {
+          path: 'users',
+          name: 'users',
+          component: () => import('@/views/admin/Users.vue')
+        },
+        {
+          path: 'auditlog',
+          name: 'auditlog',
+          component: () => import('@/views/admin/AuditLog.vue')
+        },
+        {
           path: 'system',
           name: 'system',
           component: () => import('@/views/admin/System.vue')
@@ -70,10 +85,13 @@ const router = createRouter({
   ]
 });
 
-// 路由守卫:需要 auth 的路由,无 token 跳首页(本次不做登录页)
+// 路由守卫:需要 auth 的路由,无 token 跳登录页
 router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth && !getToken()) {
-    next('/');
+    next('/login');
+  } else if (to.name === 'login' && getToken()) {
+    // 已登录用户访问登录页,跳转后台
+    next('/admin/dashboard');
   } else {
     next();
   }

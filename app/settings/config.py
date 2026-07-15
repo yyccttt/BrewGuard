@@ -3,7 +3,7 @@ import typing
 import warnings
 
 from dotenv import load_dotenv
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 
 # 加载项目根目录下的 .env 文件(若存在),本地开发用,生产环境用真实环境变量覆盖
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -20,102 +20,38 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "BrewGuard 酿酒检测系统"
     APP_DESCRIPTION: str = "智能酿酒检测系统 - 实时监测发酵过程,数据驱动品质决策"
 
-    CORS_ORIGINS: typing.List = ["*"]
+    CORS_ORIGINS: typing.List = ["http://localhost:5173", "http://127.0.0.1:5173"]
     CORS_ALLOW_CREDENTIALS: bool = True
     CORS_ALLOW_METHODS: typing.List = ["*"]
     CORS_ALLOW_HEADERS: typing.List = ["*"]
 
-    DEBUG: bool = True
+    DEBUG: bool = os.getenv("DEBUG", "true").lower() == "true"
 
     PROJECT_ROOT: str = _PROJECT_ROOT
     BASE_DIR: str = _BASE_DIR
     LOGS_ROOT: str = os.path.join(BASE_DIR, "app/logs")
     # 从环境变量读取;未配置时使用开发默认值并告警,避免启动报错
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "")
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "") or (_DEV_DEFAULT_SECRET_KEY if os.getenv("DEBUG", "true").lower() == "true" else "")
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 day
     TORTOISE_ORM: dict = {
         "connections": {
-            # SQLite configuration
-            "sqlite": {
-                "engine": "tortoise.backends.sqlite",
-                "credentials": {"file_path": f"{BASE_DIR}/db.sqlite3"},  # Path to SQLite database file
-            },
-            # MySQL/MariaDB configuration
-            # Install with: tortoise-orm[asyncmy]
-            # "mysql": {
-            #     "engine": "tortoise.backends.mysql",
-            #     "credentials": {
-            #         "host": "localhost",  # Database host address
-            #         "port": 3306,  # Database port
-            #         "user": "yourusername",  # Database username
-            #         "password": "yourpassword",  # Database password
-            #         "database": "yourdatabase",  # Database name
-            #     },
-            # },
-            # PostgreSQL configuration
-            # Install with: tortoise-orm[asyncpg]
-            # "postgres": {
-            #     "engine": "tortoise.backends.asyncpg",
-            #     "credentials": {
-            #         "host": "localhost",  # Database host address
-            #         "port": 5432,  # Database port
-            #         "user": "yourusername",  # Database username
-            #         "password": "yourpassword",  # Database password
-            #         "database": "yourdatabase",  # Database name
-            #     },
-            # },
-            # MSSQL/Oracle configuration
-            # Install with: tortoise-orm[asyncodbc]
-            # "oracle": {
-            #     "engine": "tortoise.backends.asyncodbc",
-            #     "credentials": {
-            #         "host": "localhost",  # Database host address
-            #         "port": 1433,  # Database port
-            #         "user": "yourusername",  # Database username
-            #         "password": "yourpassword",  # Database password
-            #         "database": "yourdatabase",  # Database name
-            #     },
-            # },
-            # SQLServer configuration
-            # Install with: tortoise-orm[asyncodbc]
-            # "sqlserver": {
-            #     "engine": "tortoise.backends.asyncodbc",
-            #     "credentials": {
-            #         "host": "localhost",  # Database host address
-            #         "port": 1433,  # Database port
-            #         "user": "yourusername",  # Database username
-            #         "password": "yourpassword",  # Database password
-            #         "database": "yourdatabase",  # Database name
-            #     },
-            # },
+            "default": _db_url if (_db_url := os.getenv("DATABASE_URL")) else f"sqlite://{BASE_DIR}/db.sqlite3",
         },
         "apps": {
             "models": {
                 "models": ["app.models", "aerich.models"],
-                "default_connection": "sqlite",
+                "default_connection": "default",
             },
         },
-        "use_tz": False,  # Whether to use timezone-aware datetimes
-        "timezone": "Asia/Shanghai",  # Timezone setting
+        "use_tz": False,
+        "timezone": "Asia/Shanghai",
     }
     DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore",
-    )
 
+if not Settings().SECRET_KEY:
+    warnings.warn("SECRET_KEY is not set! Set it in .env for production.", RuntimeWarning, stacklevel=2)
+    Settings.model_fields["SECRET_KEY"].default = _DEV_DEFAULT_SECRET_KEY
 
 settings = Settings()
-
-# 启动时检查 SECRET_KEY:未配置则回退到开发默认值并告警,生产环境务必设置真实密钥
-if not settings.SECRET_KEY:
-    settings.SECRET_KEY = _DEV_DEFAULT_SECRET_KEY
-    warnings.warn(
-        "SECRET_KEY 未配置,已回退到内置开发默认值。请在 .env 文件或环境变量中设置 "
-        "SECRET_KEY(可用 `openssl rand -hex 32` 生成),生产环境务必使用强随机密钥。",
-        RuntimeWarning,
-        stacklevel=1,
-    )

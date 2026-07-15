@@ -128,6 +128,16 @@ export default {
   marquee: {
     items: ['Real-time Monitoring', 'Smart Alerts', 'Batch Traceability', 'Data-Driven Brewing']
   },
+  login: {
+    subtitle: 'Intelligent brewing detection platform',
+    username: 'Username',
+    password: 'Password',
+    button: 'Sign In',
+    success: 'Login successful',
+    failed: 'Login failed',
+    hint: 'Default: admin / 123456',
+    back: 'Back to home'
+  },
   langToggle: {
     switchTo: '中文'
   },
@@ -180,6 +190,8 @@ export default {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',
       alerts: 'Alert Center',
+      users: 'Users',
+      auditlog: 'Audit Logs',
       system: 'System'
     },
     dashboard: {
@@ -360,6 +372,7 @@ export default {
     },
     detection: {
       title: 'Detection Records',
+      trendTitle: 'Detection Trend',
       add: 'New Record',
       edit: 'Edit',
       delete: 'Delete',
