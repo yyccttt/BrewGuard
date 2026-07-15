@@ -1,5 +1,7 @@
 export default {
   common: {
+    export: 'Export',
+    exportDone: 'Exported',
     commandPalette: {
       placeholder: 'Search menu or batch no...',
       empty: 'No results',
@@ -213,6 +215,10 @@ export default {
       comingSoon: 'System settings coming soon.',
       tabUsers: 'Users',
       tabAuditLog: 'Audit Log',
+      tabRoles: 'Roles',
+      tabMenus: 'Menus',
+      tabDepts: 'Depts',
+      tabApis: 'APIs',
       users: {
         add: 'New User',
         edit: 'Edit User',
@@ -252,6 +258,29 @@ export default {
         empty: 'No logs',
         requestArgs: 'Request Args',
         responseBody: 'Response Body'
+      },
+      roles: {
+        add: 'New Role', edit: 'Edit', delete: 'Delete', search: 'Search role name...',
+        name: 'Role', desc: 'Description', users: 'Users', actions: 'Actions',
+        confirmDelete: 'Delete this role?', saveSuccess: 'Role saved', deleteSuccess: 'Deleted',
+        empty: 'No roles', assignPerm: 'Assign Permissions', permHint: 'Check menus and APIs to assign to this role',
+        menus: 'Menu Permissions', apis: 'API Permissions', permSaved: 'Permissions saved'
+      },
+      menus: {
+        add: 'New Menu', edit: 'Edit', delete: 'Delete', addChild: 'Add Child',
+        name: 'Menu Name', type: 'Type', path: 'Path', icon: 'Icon', component: 'Component',
+        order: 'Order', actions: 'Actions', confirmDelete: 'Delete this menu?',
+        saveSuccess: 'Saved', deleteSuccess: 'Deleted', empty: 'No menus', title: 'Menus'
+      },
+      depts: {
+        add: 'New Dept', edit: 'Edit', delete: 'Delete', addChild: 'Add Child',
+        name: 'Department', desc: 'Remark', order: 'Order', actions: 'Actions',
+        confirmDelete: 'Delete this dept?', saveSuccess: 'Saved', deleteSuccess: 'Deleted',
+        empty: 'No departments', title: 'Departments'
+      },
+      apis: {
+        method: 'Method', path: 'Path', summary: 'Summary', tags: 'Tags',
+        refresh: 'Rescan', refreshDone: 'APIs rescanned', search: 'Search path...', empty: 'No APIs'
       }
     },
     alerts: {
@@ -320,7 +349,14 @@ export default {
       basicInfo: 'Basic Info',
       detectionRecords: 'Detection Records',
       trend: 'Trend (Temperature / pH / ABV)',
-      generatedAt: 'Generated at'
+      generatedAt: 'Generated at',
+      finishFerment: 'Finish Fermentation',
+      finishConfirm: 'Finish fermentation for this batch? Status will become completed and end time will be recorded.',
+      finished: 'Fermentation finished',
+      importDetections: 'Bulk Import',
+      importHint: 'Upload a .csv or .xlsx file with columns: temperature, ph, abv, remark. Download template first if needed.',
+      chooseFile: 'Choose File',
+      downloadTemplate: 'Download Template'
     },
     detection: {
       title: 'Detection Records',

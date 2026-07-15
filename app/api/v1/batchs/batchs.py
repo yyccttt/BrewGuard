@@ -2,8 +2,10 @@ from fastapi import APIRouter, Query
 from tortoise.expressions import Q
 
 from app.controllers.batch import batch_controller
+from app.models.batch import Batch
 from app.schemas import Success, SuccessExtra
 from app.schemas.batchs import *
+from app.utils.export import export_to_excel
 
 router = APIRouter()
 
@@ -51,3 +53,31 @@ async def delete_batch(
     obj.is_deleted = True
     await obj.save()
     return Success(msg="Deleted Successfully")
+
+
+@router.post("/finish", summary="结束发酵(状态流转为 completed)")
+async def finish_batch(
+    id: int = Query(..., description="批次ID"),
+):
+    """将批次状态置为 completed 并自动填充 end_time(#43 批次生命周期)"""
+    from datetime import datetime
+    obj = await batch_controller.get(id=id)
+    obj.status = "completed"
+    obj.end_time = datetime.now()
+    await obj.save()
+    return Success(msg="批次已结束")
+
+
+@router.get("/export", summary="导出批次列表 Excel")
+async def export_batch():
+    """导出全部未删除批次为 Excel(#40)"""
+    objs = await Batch.filter(is_deleted=False).order_by("-created_at")
+    rows = [await obj.to_dict() for obj in objs]
+    columns = [
+        ("batch_no", "批次编号"), ("recipe", "配方"), ("status", "状态"),
+        ("start_time", "开始时间"), ("end_time", "结束时间"), ("remark", "备注"),
+        ("temp_min", "温度下限"), ("temp_max", "温度上限"),
+        ("ph_min", "pH下限"), ("ph_max", "pH上限"),
+        ("abv_min", "酒精度下限"), ("abv_max", "酒精度上限"),
+    ]
+    return export_to_excel(columns, rows, "batch_export")

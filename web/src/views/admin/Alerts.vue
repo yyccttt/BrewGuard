@@ -2,7 +2,10 @@
   <div class="alert-page">
     <div class="alert-toolbar">
       <h1 class="alert-title">{{ t('admin.alerts.title') }}</h1>
-      <Select v-model="statusFilter" :options="statusOptions" optionLabel="label" optionValue="value" @change="loadList" class="alert-filter" />
+      <div class="alert-toolbar-actions">
+        <Select v-model="statusFilter" :options="statusOptions" optionLabel="label" optionValue="value" @change="loadList" class="alert-filter" />
+        <Button :label="t('common.export')" icon="pi pi-file-excel" severity="success" size="small" :loading="exporting" @click="doExport" />
+      </div>
     </div>
 
     <DataTable :value="alerts" :loading="loading" class="alert-table">
@@ -46,6 +49,7 @@ import Button from 'primevue/button';
 import Select from 'primevue/select';
 import Tag from 'primevue/tag';
 import { get, post } from '@/utils/http';
+import { downloadFile } from '@/utils/download';
 import { useSharedWebSocket } from '@/composables/useWebSocket';
 import './Alerts.css';
 
@@ -94,6 +98,20 @@ async function loadList() {
     toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
   } finally {
     loading.value = false;
+  }
+}
+
+// Excel 导出(带当前状态筛选)
+const exporting = ref(false);
+async function doExport() {
+  exporting.value = true;
+  try {
+    await downloadFile('/alert/export', statusFilter.value ? { status: statusFilter.value } : undefined);
+    toast.add({ severity: 'success', summary: 'OK', detail: t('common.exportDone'), life: 3000 });
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
+  } finally {
+    exporting.value = false;
   }
 }
 

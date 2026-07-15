@@ -4,6 +4,7 @@
       <h1 class="batch-title">{{ t('admin.batch.title') }}</h1>
       <div class="batch-toolbar-actions">
         <InputText v-model="searchNo" :placeholder="t('admin.batch.search')" @keyup.enter="crud.refresh()" class="batch-search" />
+        <Button :label="t('common.export')" icon="pi pi-file-excel" severity="success" size="small" :loading="exporting" @click="doExport" />
         <Button :label="t('admin.batch.add')" icon="pi pi-plus" @click="crud.openCreate()" v-permission="'batch:create'" />
       </div>
     </div>
@@ -117,10 +118,27 @@ import Tag from 'primevue/tag';
 import Dialog from 'primevue/dialog';
 import ConfirmDialog from 'primevue/confirmdialog';
 import { useCrud } from '@/composables/useCrud';
+import { downloadFile } from '@/utils/download';
+import { useToast } from 'primevue/usetoast';
 import './BatchList.css';
 
 const { t } = useI18n();
 const router = useRouter();
+const toast = useToast();
+
+// Excel 导出
+const exporting = ref(false);
+async function doExport() {
+  exporting.value = true;
+  try {
+    await downloadFile('/batch/export');
+    toast.add({ severity: 'success', summary: 'OK', detail: t('common.exportDone'), life: 3000 });
+  } catch (e) {
+    toast.add({ severity: 'error', summary: 'Error', detail: (e as Error).message, life: 3000 });
+  } finally {
+    exporting.value = false;
+  }
+}
 const confirm = useConfirm();
 
 interface Batch {

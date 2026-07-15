@@ -19,10 +19,46 @@
         <i class="pi pi-history" />
         {{ t('admin.system.tabAuditLog') }}
       </button>
+      <button
+        class="sys-tab"
+        :class="{ 'is-active': activeTab === 'roles' }"
+        @click="activeTab = 'roles'"
+      >
+        <i class="pi pi-shield" />
+        {{ t('admin.system.tabRoles') }}
+      </button>
+      <button
+        class="sys-tab"
+        :class="{ 'is-active': activeTab === 'menus' }"
+        @click="activeTab = 'menus'"
+      >
+        <i class="pi pi-bars" />
+        {{ t('admin.system.tabMenus') }}
+      </button>
+      <button
+        class="sys-tab"
+        :class="{ 'is-active': activeTab === 'depts' }"
+        @click="activeTab = 'depts'"
+      >
+        <i class="pi pi-sitemap" />
+        {{ t('admin.system.tabDepts') }}
+      </button>
+      <button
+        class="sys-tab"
+        :class="{ 'is-active': activeTab === 'apis' }"
+        @click="activeTab = 'apis'"
+      >
+        <i class="pi pi-bolt" />
+        {{ t('admin.system.tabApis') }}
+      </button>
     </div>
 
     <Users v-if="activeTab === 'users'" />
     <AuditLog v-else-if="activeTab === 'audit'" />
+    <Roles v-else-if="activeTab === 'roles'" />
+    <Menus v-else-if="activeTab === 'menus'" />
+    <Depts v-else-if="activeTab === 'depts'" />
+    <Apis v-else-if="activeTab === 'apis'" />
   </div>
 </template>
 
@@ -31,10 +67,14 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Users from './system/Users.vue';
 import AuditLog from './system/AuditLog.vue';
+import Roles from './system/Roles.vue';
+import Menus from './system/Menus.vue';
+import Depts from './system/Depts.vue';
+import Apis from './system/Apis.vue';
 import './system/SystemPages.css';
 
 const { t } = useI18n();
-const activeTab = ref<'users' | 'audit'>('users');
+const activeTab = ref<string>('users');
 </script>
 
 <style scoped>
