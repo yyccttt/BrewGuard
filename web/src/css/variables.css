@@ -52,3 +52,74 @@
     background-position: 100% 50%;
   }
 }
+
+/* ===== 亮色模式覆盖 =====
+   后台页面原本大量使用硬编码暗色(rgba(255,255,255,...)、#0f0f0f 等)。
+   亮色模式下通过覆盖语义变量 + 兜底规则,把主要背景/文字/边框翻转为浅色。
+   逐个硬编码颜色的全量替换工作量过大,此处用变量层覆盖保证切换可用。 */
+[data-theme='light'] {
+  --bg-body: #f5f7f5;
+  --bg-card: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #eef3ee;
+
+  --border-primary: #e2e8e2;
+  --border-secondary: #e2e8e2;
+  --border-subtle: #e8ece8;
+
+  --text-primary: #1a2e1a;
+  --text-secondary: #2d3a2d;
+  --text-muted: #5a6a5a;
+  --text-dimmed: #6b7a6b;
+  --text-link: #2d8a52;
+
+  --shadow-dropdown: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-primary: 0 2px 8px rgba(66, 184, 131, 0.25);
+
+  --gradient-title: linear-gradient(135deg, #1a2e1a 0%, #2d8a52 40%, #3da86a 80%, #1a2e1a 100%);
+}
+
+/* 亮色模式兜底:覆盖后台常见的硬编码暗色背景与卡片 */
+[data-theme='light'] body {
+  background: var(--bg-body);
+  color: var(--text-primary);
+}
+
+/* 亮色下把后台硬编码的纯黑卡片背景转为浅色(Dashboard/BatchList/Detail/Alerts 通用) */
+[data-theme='light'] .batch-table,
+[data-theme='light'] .detail-table,
+[data-theme='light'] .dash-card,
+[data-theme='light'] .dash-chart-card,
+[data-theme='light'] .detail-batch-card,
+[data-theme='light'] .detail-section,
+[data-theme='light'] .batch-page,
+[data-theme='light'] .detail-page {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-primary);
+}
+
+/* 亮色下硬编码 rgba(255,255,255,...) 文字翻转为深色 */
+[data-theme='light'] .batch-title,
+[data-theme='light'] .batch-empty,
+[data-theme='light'] .detail-batch-title,
+[data-theme='light'] .detail-section-title,
+[data-theme='light'] .detail-empty,
+[data-theme='light'] .dash-chart-title,
+[data-theme='light'] .batch-form-row label {
+  color: var(--text-primary);
+}
+
+/* PrimeVue 表格/输入框在亮色下用浅色背景 */
+[data-theme='light'] .p-datatable .p-datatable-thead > tr > th {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+[data-theme='light'] .p-datatable .p-datatable-tbody > tr > td {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+[data-theme='light'] .p-datatable .p-datatable-tbody > tr:hover > td {
+  background: var(--bg-hover);
+}
+

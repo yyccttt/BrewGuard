@@ -67,6 +67,71 @@
   min-width: 420px;
 }
 
+/* 告警阈值配置区 */
+.batch-threshold {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1rem;
+  margin-top: 0.4rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.batch-threshold-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Geist', sans-serif;
+}
+
+.batch-threshold-hint {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.5;
+}
+
+.batch-threshold-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.batch-threshold-label {
+  flex: 0 0 150px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Geist', sans-serif;
+}
+
+.batch-threshold-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.batch-threshold-inputs .p-inputnumber {
+  flex: 1;
+}
+
+.batch-threshold-sep {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .batch-threshold-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  .batch-threshold-label {
+    flex: unset;
+  }
+}
+
 @media (max-width: 640px) {
   .batch-form {
     min-width: unset;

@@ -2,12 +2,31 @@
   <div class="dash-page">
     <!-- 统计卡片 -->
     <div class="dash-cards">
-      <AnimatedContent v-for="(card, i) in cards" :key="card.key" direction="vertical" :distance="40" :delay="i * 0.08" :duration="0.5">
+      <template v-if="statsLoading && !statsLoaded">
+        <div v-for="i in 5" :key="i" class="dash-card dash-card--skeleton">
+          <Skeleton width="44px" height="44px" borderRadius="10px" />
+          <div class="dash-card-body">
+            <Skeleton width="60px" height="28px" />
+            <Skeleton width="80px" height="14px" style="margin-top: 6px" />
+          </div>
+        </div>
+      </template>
+      <AnimatedContent
+        v-else
+        v-for="(card, i) in cards"
+        :key="card.key"
+        direction="vertical"
+        :distance="40"
+        :delay="i * 0.08"
+        :duration="0.5"
+      >
         <div class="dash-card" :class="`dash-card--${card.key}`">
           <div class="dash-card-icon"><i :class="card.icon" /></div>
           <div class="dash-card-body">
             <div class="dash-card-value">
-              {{ card.value }}<span v-if="card.suffix" class="dash-card-suffix">{{ card.suffix }}</span>
+              <CountUp v-if="card.decimals" :to="card.value" :duration="1.2" className="dash-count" />
+              <template v-else>{{ card.value }}</template>
+              <span v-if="card.suffix" class="dash-card-suffix">{{ card.suffix }}</span>
             </div>
             <div class="dash-card-label">{{ t(card.label) }}</div>
           </div>
@@ -15,16 +34,22 @@
       </AnimatedContent>
     </div>
 
-    <!-- 趋势折线图(模拟数据) -->
+    <!-- 趋势折线图(真实数据) -->
     <div class="dash-chart-card">
       <div class="dash-chart-header">
         <div>
           <h3 class="dash-chart-title">{{ t('admin.dashboard.chart.trendTitle') }}</h3>
           <p class="dash-chart-subtitle">{{ t('admin.dashboard.chart.trendSubtitle') }}</p>
         </div>
+        <span v-if="trendLoaded" class="dash-live-tag"><span class="dash-live-dot" />{{ t('admin.dashboard.live') }}</span>
       </div>
       <div class="dash-chart-body">
-        <Line :data="trendData" :options="trendOptions" />
+        <Skeleton v-if="trendLoading && !trendLoaded" height="100%" borderRadius="8px" />
+        <div v-else-if="trendEmpty" class="dash-empty">
+          <i class="pi pi-chart-line" />
+          <p>{{ t('admin.dashboard.noTrendData') }}</p>
+        </div>
+        <Line v-else :data="trendData" :options="trendOptions" />
       </div>
     </div>
 
@@ -53,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Line, Doughnut } from 'vue-chartjs';
 import {
@@ -67,7 +92,9 @@ import {
   Legend as ChartLegend,
   Filler
 } from 'chart.js';
+import Skeleton from 'primevue/skeleton';
 import AnimatedContent from '@/content/Animations/AnimatedContent/AnimatedContent.vue';
+import CountUp from '@/content/TextAnimations/CountUp/CountUp.vue';
 import { get } from '@/utils/http';
 import { useWebSocket } from '@/composables/useWebSocket';
 import './Dashboard.css';
@@ -85,7 +112,9 @@ ChartJS.register(
 
 const { t } = useI18n();
 
-// ===== 真实统计数据 =====
+const REFRESH_MS = 30_000; // 30 秒自动刷新
+
+// ===== 概览统计 =====
 const stats = ref({
   batch_total: 0,
   batch_abnormal: 0,
@@ -96,50 +125,64 @@ const stats = ref({
   alert_open: 0,
   status_distribution: { fermenting: 0, completed: 0, abnormal: 0 }
 });
+const statsLoading = ref(false);
+const statsLoaded = ref(false);
 
 const cards = computed(() => [
-  { key: 'batch', icon: 'pi pi-tags', value: stats.value.batch_total, suffix: '', label: 'admin.dashboard.cards.batchTotal' },
-  { key: 'abnormal', icon: 'pi pi-exclamation-triangle', value: stats.value.batch_abnormal, suffix: '', label: 'admin.dashboard.cards.batchAbnormal' },
-  { key: 'detection', icon: 'pi pi-database', value: stats.value.detection_total, suffix: '', label: 'admin.dashboard.cards.detectionTotal' },
-  { key: 'temp', icon: 'pi pi-sun', value: stats.value.avg_temperature, suffix: t('admin.dashboard.cards.tempUnit'), label: 'admin.dashboard.cards.avgTemp' },
-  { key: 'alert', icon: 'pi pi-bell', value: stats.value.alert_open || 0, suffix: '', label: 'admin.dashboard.cards.alertOpen' }
+  { key: 'batch', icon: 'pi pi-tags', value: stats.value.batch_total, suffix: '', label: 'admin.dashboard.cards.batchTotal', decimals: true },
+  { key: 'abnormal', icon: 'pi pi-exclamation-triangle', value: stats.value.batch_abnormal, suffix: '', label: 'admin.dashboard.cards.batchAbnormal', decimals: true },
+  { key: 'detection', icon: 'pi pi-database', value: stats.value.detection_total, suffix: '', label: 'admin.dashboard.cards.detectionTotal', decimals: true },
+  { key: 'temp', icon: 'pi pi-sun', value: stats.value.avg_temperature, suffix: t('admin.dashboard.cards.tempUnit'), label: 'admin.dashboard.cards.avgTemp', decimals: true },
+  { key: 'alert', icon: 'pi pi-bell', value: stats.value.alert_open || 0, suffix: '', label: 'admin.dashboard.cards.alertOpen', decimals: true }
 ]);
 
-// ===== 模拟趋势数据(24小时) =====
-const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`);
-const tempSeries = hours.map((_, i) => +(22 + Math.sin(i * 0.5) * 2.5 + Math.sin(i * 1.3) * 0.8).toFixed(1));
-const phSeries = hours.map((_, i) => +(4.2 + Math.sin(i * 0.4 + 1) * 0.3 + Math.cos(i * 0.8) * 0.1).toFixed(2));
-const abvSeries = hours.map((_, i) => +(3 + i * 0.18 + Math.sin(i * 0.6) * 0.4).toFixed(1));
+// ===== 趋势数据(真实接口) =====
+const trendLabels = ref<string[]>([]);
+const trendPoints = ref<Array<{ temperature: number | null; ph: number | null; abv: number | null }>>([]);
+const trendLoading = ref(false);
+const trendLoaded = ref(false);
+
+// 是否完全无数据(所有点都为 null)
+const trendEmpty = computed(() =>
+  trendLoaded.value && trendPoints.value.every(p => p.temperature === null && p.ph === null && p.abv === null)
+);
+
+// Chart.js 需要数字,null 会被忽略以断开折线
+const toSeries = (key: 'temperature' | 'ph' | 'abv') =>
+  trendPoints.value.map(p => (p[key] === null ? null : p[key]));
 
 const trendData = computed(() => ({
-  labels: hours,
+  labels: trendLabels.value,
   datasets: [
     {
       label: t('admin.dashboard.chart.tempLabel'),
-      data: tempSeries,
+      data: toSeries('temperature'),
       borderColor: '#7cff67',
       backgroundColor: 'rgba(124,255,103,0.1)',
       tension: 0.4,
       fill: true,
-      yAxisID: 'y'
+      yAxisID: 'y',
+      spanGaps: true
     },
     {
       label: t('admin.dashboard.chart.phLabel'),
-      data: phSeries,
+      data: toSeries('ph'),
       borderColor: '#5b9dff',
       backgroundColor: 'rgba(91,157,255,0.05)',
       tension: 0.4,
       fill: false,
-      yAxisID: 'y1'
+      yAxisID: 'y1',
+      spanGaps: true
     },
     {
       label: t('admin.dashboard.chart.abvLabel'),
-      data: abvSeries,
+      data: toSeries('abv'),
       borderColor: '#ffb347',
       backgroundColor: 'rgba(255,179,71,0.05)',
       tension: 0.4,
       fill: false,
-      yAxisID: 'y'
+      yAxisID: 'y',
+      spanGaps: true
     }
   ]
 }));
@@ -217,23 +260,58 @@ const distLegend = computed(() => [
   { key: 'abnormal', color: distColors.abnormal, value: stats.value.status_distribution.abnormal }
 ]);
 
+// ===== 数据加载 =====
 async function loadStats() {
   try {
     const res = await get<any>('/stats/overview');
     if (res.data) stats.value = res.data;
   } catch (e) {
     console.error('Failed to load stats', e);
+  } finally {
+    statsLoading.value = false;
+    statsLoaded.value = true;
   }
+}
+
+// 趋势折线图数据加载(重绘成本高,保持轮询节奏刷新)
+async function loadTrends() {
+  trendLoading.value = true;
+  try {
+    const res = await get<any>('/stats/trends', { hours: 24 });
+    if (res.data) {
+      trendLabels.value = res.data.labels || [];
+      trendPoints.value = res.data.points || [];
+    }
+  } catch (e) {
+    console.error('Failed to load trends', e);
+  } finally {
+    trendLoading.value = false;
+    trendLoaded.value = true;
+  }
+}
+
+async function refreshAll() {
+  await Promise.all([loadStats(), loadTrends()]);
 }
 
 // WebSocket: 收到新检测记录时刷新统计(实时跳数,无需等轮询)
 const { on } = useWebSocket();
 
+let timer: ReturnType<typeof setInterval> | null = null;
+
 onMounted(() => {
-  loadStats();
+  statsLoading.value = true;
+  trendLoading.value = true;
+  refreshAll();
+  // 30 秒自动轮询刷新(统计 + 趋势图)
+  timer = setInterval(refreshAll, REFRESH_MS);
+  // WebSocket 实时推送:新检测数据到达时立即刷新概览统计(秒级跳数)
   on('detection', () => {
-    // 新检测数据到达,刷新概览统计(批次数/检测数/平均温度/告警等)
     loadStats();
   });
+});
+
+onUnmounted(() => {
+  if (timer) clearInterval(timer);
 });
 </script>

@@ -108,6 +108,22 @@ export default {
   langToggle: {
     switchTo: '中文'
   },
+  error: {
+    403: {
+      title: 'Access Denied',
+      desc: 'You do not have permission to view this page. Please contact an administrator for the required role or permissions.'
+    },
+    404: {
+      title: 'Page Not Found',
+      desc: 'The page you are looking for does not exist. It may have been moved or the address mistyped.'
+    },
+    500: {
+      title: 'Server Error',
+      desc: 'Something went wrong on our end. Please try again later, or contact an administrator if it persists.'
+    },
+    backHome: 'Back Home',
+    goBack: 'Go Back'
+  },
   ai: {
     title: 'BrewGuard Assistant',
     welcome: 'Hi! I am the BrewGuard AI assistant. Ask me anything about fermentation detection, batch management, or brewing metrics.',
@@ -125,6 +141,18 @@ export default {
   admin: {
     brand: 'BrewGuard Admin',
     backHome: 'Home',
+    theme: {
+      light: 'Light',
+      dark: 'Dark',
+      auto: 'Auto'
+    },
+    tab: {
+      closeCurrent: 'Close',
+      closeLeft: 'Close Left',
+      closeRight: 'Close Right',
+      closeOthers: 'Close Others',
+      closeAll: 'Close All'
+    },
     menu: {
       dashboard: 'Dashboard',
       batch: 'Fermentation Batches',
@@ -134,6 +162,8 @@ export default {
     dashboard: {
       title: 'Dashboard',
       overview: 'Overview',
+      live: 'LIVE',
+      noTrendData: 'No detection data yet. The trend chart will appear once records exist.',
       cards: {
         batchTotal: 'Total Batches',
         batchAbnormal: 'Abnormal Batches',
@@ -157,7 +187,49 @@ export default {
     },
     system: {
       title: 'System',
-      comingSoon: 'System settings coming soon.'
+      comingSoon: 'System settings coming soon.',
+      tabUsers: 'Users',
+      tabAuditLog: 'Audit Log',
+      users: {
+        add: 'New User',
+        edit: 'Edit User',
+        delete: 'Delete',
+        search: 'Search username...',
+        username: 'Username',
+        email: 'Email',
+        status: 'Status',
+        active: 'Active',
+        inactive: 'Disabled',
+        superuser: 'Superuser',
+        roles: 'Roles',
+        actions: 'Actions',
+        password: 'Password',
+        resetPassword: 'Reset Password',
+        resetPasswordConfirm: 'Reset this user\'s password to 123456?',
+        resetPasswordDone: 'Password reset to 123456',
+        confirmDelete: 'Delete this user?',
+        saveSuccess: 'User saved',
+        deleteSuccess: 'User deleted',
+        empty: 'No users',
+        toggleActive: 'Toggle Active'
+      },
+      auditLog: {
+        title: 'Audit Log',
+        username: 'User',
+        module: 'Module',
+        method: 'Method',
+        path: 'Path',
+        summary: 'Summary',
+        status: 'Status',
+        time: 'Time',
+        actions: 'Actions',
+        filter: 'Filter',
+        reset: 'Reset',
+        detail: 'Detail',
+        empty: 'No logs',
+        requestArgs: 'Request Args',
+        responseBody: 'Response Body'
+      }
     },
     alerts: {
       title: 'Alert Center',
@@ -209,7 +281,23 @@ export default {
       deleteSuccess: 'Batch deleted successfully',
       empty: 'No batches yet. Create your first one.',
       detail: 'View Details',
-      back: 'Back to Batches'
+      back: 'Back to Batches',
+      thresholdConfig: 'Alert Threshold Config',
+      thresholdHint: 'When configured, detections of this batch will be alerted by these thresholds; leave blank to use system defaults (temp 18~28, pH 3.5~4.5, abv 0~15).',
+      tempRange: 'Temperature range (°C)',
+      phRange: 'pH range',
+      abvRange: 'ABV range (%)',
+      min: 'Min',
+      max: 'Max',
+      thresholdInvalid: 'Min must be less than max',
+      thresholdSaved: 'Thresholds saved',
+      exportReport: 'Export Report',
+      exportDone: 'Report exported',
+      reportTitle: 'Batch Quality Report',
+      basicInfo: 'Basic Info',
+      detectionRecords: 'Detection Records',
+      trend: 'Trend (Temperature / pH / ABV)',
+      generatedAt: 'Generated at'
     },
     detection: {
       title: 'Detection Records',

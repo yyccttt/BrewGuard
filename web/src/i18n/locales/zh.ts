@@ -108,6 +108,22 @@ export default {
   langToggle: {
     switchTo: 'EN'
   },
+  error: {
+    403: {
+      title: '无权访问',
+      desc: '抱歉,你没有访问该页面的权限。请联系管理员授予相应角色或权限。'
+    },
+    404: {
+      title: '页面走丢了',
+      desc: '你要找的页面不存在,可能已被移除或地址输入有误。'
+    },
+    500: {
+      title: '服务器开小差了',
+      desc: '服务器内部错误,请稍后重试。如问题持续,请联系管理员。'
+    },
+    backHome: '返回首页',
+    goBack: '返回上一页'
+  },
   ai: {
     title: 'BrewGuard 助手',
     welcome: '你好!我是 BrewGuard AI 助手,可以回答关于发酵检测、批次管理、酿造指标等问题。',
@@ -125,6 +141,18 @@ export default {
   admin: {
     brand: 'BrewGuard 管理后台',
     backHome: '首页',
+    theme: {
+      light: '亮色模式',
+      dark: '暗色模式',
+      auto: '跟随系统'
+    },
+    tab: {
+      closeCurrent: '关闭当前',
+      closeLeft: '关闭左侧',
+      closeRight: '关闭右侧',
+      closeOthers: '关闭其他',
+      closeAll: '关闭全部'
+    },
     menu: {
       dashboard: '仪表盘',
       batch: '发酵批次',
@@ -134,6 +162,8 @@ export default {
     dashboard: {
       title: '仪表盘',
       overview: '概览',
+      live: '实时',
+      noTrendData: '暂无检测数据,趋势图将在有检测记录后显示',
       cards: {
         batchTotal: '批次总数',
         batchAbnormal: '异常批次',
@@ -157,7 +187,49 @@ export default {
     },
     system: {
       title: '系统管理',
-      comingSoon: '系统设置即将上线。'
+      comingSoon: '系统设置即将上线。',
+      tabUsers: '用户管理',
+      tabAuditLog: '审计日志',
+      users: {
+        add: '新建用户',
+        edit: '编辑用户',
+        delete: '删除',
+        search: '搜索用户名...',
+        username: '用户名',
+        email: '邮箱',
+        status: '状态',
+        active: '启用',
+        inactive: '禁用',
+        superuser: '超管',
+        roles: '角色',
+        actions: '操作',
+        password: '密码',
+        resetPassword: '重置密码',
+        resetPasswordConfirm: '确定将该用户密码重置为 123456 吗?',
+        resetPasswordDone: '密码已重置为 123456',
+        confirmDelete: '确定删除该用户吗?',
+        saveSuccess: '用户保存成功',
+        deleteSuccess: '用户删除成功',
+        empty: '暂无用户',
+        toggleActive: '启用/禁用'
+      },
+      auditLog: {
+        title: '审计日志',
+        username: '用户',
+        module: '模块',
+        method: '方法',
+        path: '路径',
+        summary: '描述',
+        status: '状态码',
+        time: '时间',
+        actions: '操作',
+        filter: '筛选',
+        reset: '重置',
+        detail: '详情',
+        empty: '暂无日志',
+        requestArgs: '请求参数',
+        responseBody: '响应数据'
+      }
     },
     alerts: {
       title: '告警中心',
@@ -209,7 +281,23 @@ export default {
       deleteSuccess: '批次删除成功',
       empty: '暂无批次,点击新建第一个批次。',
       detail: '查看详情',
-      back: '返回批次列表'
+      back: '返回批次列表',
+      thresholdConfig: '告警阈值配置',
+      thresholdHint: '配置后,该批次的检测记录将按此阈值自动告警;留空则使用系统默认值(温度 18~28、pH 3.5~4.5、酒精度 0~15)。',
+      tempRange: '温度范围 (°C)',
+      phRange: 'pH 范围',
+      abvRange: '酒精度范围 (%)',
+      min: '下限',
+      max: '上限',
+      thresholdInvalid: '下限必须小于上限',
+      thresholdSaved: '阈值已保存',
+      exportReport: '导出报告',
+      exportDone: '报告已导出',
+      reportTitle: '批次质检报告',
+      basicInfo: '批次基本信息',
+      detectionRecords: '检测记录',
+      trend: '趋势图(温度 / pH / 酒精度)',
+      generatedAt: '生成时间'
     },
     detection: {
       title: '检测记录',

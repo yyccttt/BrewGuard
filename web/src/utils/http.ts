@@ -30,6 +30,14 @@ http.interceptors.response.use(
   },
   error => {
     console.error('[HTTP Error]', error.message);
+    // 根据状态码跳转错误页(动态 import 规避循环依赖)
+    const status = error.response?.status;
+    const current = window.location.pathname;
+    if (status === 403 && current !== '/403') {
+      import('@/router').then(({ default: router }) => router.replace('/403'));
+    } else if (status === 500 && current !== '/500') {
+      import('@/router').then(({ default: router }) => router.replace('/500'));
+    }
     return Promise.reject(error);
   }
 );
