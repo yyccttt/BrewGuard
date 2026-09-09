@@ -174,6 +174,8 @@ export default {
   admin: {
     brand: 'BrewGuard Admin',
     backHome: 'Home',
+    openMenu: 'Open admin navigation',
+    closeMenu: 'Close admin navigation',
     theme: {
       light: 'Light',
       dark: 'Dark',

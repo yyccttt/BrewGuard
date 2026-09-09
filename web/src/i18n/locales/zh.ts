@@ -174,6 +174,8 @@ export default {
   admin: {
     brand: 'BrewGuard 管理后台',
     backHome: '首页',
+    openMenu: '打开后台导航',
+    closeMenu: '关闭后台导航',
     theme: {
       light: '亮色模式',
       dark: '暗色模式',
