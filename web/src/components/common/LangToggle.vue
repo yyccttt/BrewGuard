@@ -21,6 +21,7 @@ const { t, toggle } = useLocale();
   z-index: 100;
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 6px;
   padding: 8px 14px;
   font-family: 'Geist Mono', monospace;
