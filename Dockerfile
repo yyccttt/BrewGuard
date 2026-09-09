@@ -3,8 +3,8 @@
 # --- 阶段 1: 前端构建 ---
 FROM node:22-alpine AS frontend-build
 WORKDIR /build
-COPY web/package.json web/pnpm-lock.yaml ./
-RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm install --frozen-lockfile
+COPY web/package.json web/pnpm-lock.yaml web/pnpm-workspace.yaml ./
+RUN corepack enable && corepack prepare pnpm@11.22.0 --activate && pnpm install --frozen-lockfile
 COPY web/ ./
 RUN pnpm build
 
